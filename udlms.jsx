@@ -295,7 +295,8 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
                 hourlyRate: initialTutorDetails.hourlyRate || '',
                 endDate: getSafeDateString(initialTutorDetails.endDate),
                 schedule: initialTutorDetails.schedule || { days: [], startTime: '09:00', endTime: '10:00' }
-            }
+            },
+            installments: studentToEdit?.installments || []
         };
     }, [studentToEdit]);
 
@@ -366,6 +367,29 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
         setIsSubmitting(true);
         setStatusMessage(null);
         let dataToSave = { ...formData };
+        
+        if (!dataToSave.isTutoring) {
+            const totalFee = parseFloat(dataToSave.feeDetails.totalFee) || 0;
+            const numInstallments = parseInt(dataToSave.feeDetails.numberOfInstallments, 10) || 1;
+            const installmentAmount = totalFee / numInstallments;
+            const startDate = new Date(dataToSave.enrollmentDate.replace(/-/g, '/'));
+            
+            dataToSave.installments = [];
+            for (let i = 0; i < numInstallments; i++) {
+                const dueDate = new Date(startDate);
+                dueDate.setMonth(startDate.getMonth() + i);
+                dataToSave.installments.push({
+                    number: i + 1,
+                    amount: installmentAmount,
+                    dueDate: Timestamp.fromDate(dueDate),
+                    status: 'Unpaid'
+                });
+            }
+        } else {
+            dataToSave.installments = [];
+        }
+
+
         try {
             const nationalIdUrl = await uploadFile(files.nationalId, `artifacts/${appId}/users/${userId}/students/${Date.now()}_nationalId`);
             const agreementUrl = await uploadFile(files.agreement, `artifacts/${appId}/users/${userId}/students/${Date.now()}_agreement`);
@@ -1184,28 +1208,42 @@ const WeeklyOverview = ({ events }) => {
 
 // --- FinancesModule.js ---
 const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
+    const { db, userId, appId } = useContext(AppContext);
+
     if (!student) return null;
 
-    const { feeDetails, enrollmentDate } = student;
-    const installments = [];
-    if (feeDetails && enrollmentDate) {
-        const totalFee = parseFloat(feeDetails.totalFee) || 0;
-        const numInstallments = parseInt(feeDetails.numberOfInstallments, 10) || 1;
-        const installmentAmount = totalFee / numInstallments;
-        const startDate = enrollmentDate.toDate();
+    const handleLogPayment = async (installmentNumber) => {
+        const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', student.id);
+        
+        const updatedInstallments = student.installments.map(inst => {
+            if (inst.number === installmentNumber) {
+                return { ...inst, status: 'Paid' };
+            }
+            return inst;
+        });
 
-        for (let i = 0; i < numInstallments; i++) {
-            const dueDate = new Date(startDate);
-            dueDate.setMonth(startDate.getMonth() + i);
-            installments.push({
-                number: i + 1,
-                amount: installmentAmount.toFixed(2),
-                dueDate: dueDate.toLocaleDateString(),
-                status: 'Unpaid' // This will be dynamic later
+        const installmentToLog = student.installments.find(inst => inst.number === installmentNumber);
+
+        try {
+            await updateDoc(studentDocRef, {
+                installments: updatedInstallments
             });
-        }
-    }
 
+            const transactionsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'transactions');
+            await addDoc(transactionsCollectionPath, {
+                studentId: student.id,
+                studentName: student.fullName,
+                amount: installmentToLog.amount,
+                paymentDate: Timestamp.now(),
+                type: 'income-group',
+                description: `Installment #${installmentNumber} for ${student.fullName}`
+            });
+
+        } catch (error) {
+            console.error("Error logging payment: ", error);
+        }
+    };
+    
     const modalTitle = (
         <div>
             <h3 className="text-xl font-bold text-gray-800">{student.fullName}</h3>
@@ -1215,23 +1253,44 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
     
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={modalTitle}>
-            <div className="space-y-4">
-                <h4 className="font-semibold">Installment Plan</h4>
-                 <ul className="divide-y divide-gray-200">
-                    {installments.map(inst => (
-                        <li key={inst.number} className="py-3 flex justify-between items-center">
-                            <div>
-                                <p className="font-medium text-gray-800">Installment #{inst.number}</p>
-                                <p className="text-sm text-gray-500">Due: {inst.dueDate}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="font-semibold text-gray-800">₺{inst.amount}</p>
-                                <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">{inst.status}</span>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            {student.isTutoring ? (
+                <div className="space-y-4">
+                    <p>Hourly Rate: ₺{student.tutoringDetails?.hourlyRate || 'N/A'}</p>
+                    <button className="w-full px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700">
+                        Log Tutoring Session Payment
+                    </button>
+                    <p className="text-center text-gray-500 py-4">Payment history for tutoring sessions will be shown here.</p>
+                </div>
+            ) : (
+                <div className="space-y-4">
+                    <h4 className="font-semibold">Installment Plan</h4>
+                     <ul className="divide-y divide-gray-200">
+                        {(student.installments || []).map(inst => (
+                            <li key={inst.number} className="py-3 flex justify-between items-center">
+                                <div>
+                                    <p className="font-medium text-gray-800">Installment #{inst.number}</p>
+                                    <p className="text-sm text-gray-500">Due: {inst.dueDate.toDate().toLocaleDateString()}</p>
+                                </div>
+                                <div className="text-right flex items-center space-x-4">
+                                    <div>
+                                        <p className="font-semibold text-gray-800">₺{inst.amount.toFixed(2)}</p>
+                                        {inst.status === 'Paid' ? (
+                                             <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Paid</span>
+                                        ) : (
+                                             <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Unpaid</span>
+                                        )}
+                                    </div>
+                                    {inst.status === 'Unpaid' && (
+                                        <button onClick={() => handleLogPayment(inst.number)} className="px-3 py-1 text-sm rounded-lg text-white bg-blue-600 hover:bg-blue-700">
+                                            Log Payment
+                                        </button>
+                                    )}
+                                </div>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
+            )}
         </Modal>
     );
 };
@@ -1289,9 +1348,117 @@ const StudentPaymentsView = ({ onStudentSelect }) => {
     );
 };
 
+const BusinessExpensesView = () => {
+    const { db, storage, userId, appId } = useContext(AppContext);
+    const [formData, setFormData] = useState({
+        category: 'Rent',
+        amount: '',
+        expenseDate: new Date().toISOString().split('T')[0],
+        description: '',
+    });
+    const [invoiceFile, setInvoiceFile] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleFileChange = (e) => {
+        if (e.target.files[0]) {
+            setInvoiceFile(e.target.files[0]);
+        }
+    };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        
+        let invoiceUrl = '';
+        try {
+            if (invoiceFile) {
+                const storageRef = ref(storage, `artifacts/${appId}/users/${userId}/invoices/${Date.now()}_${invoiceFile.name}`);
+                await uploadBytes(storageRef, invoiceFile);
+                invoiceUrl = await getDownloadURL(storageRef);
+            }
+
+            const transactionsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'transactions');
+            await addDoc(transactionsCollectionPath, {
+                type: 'expense-business',
+                category: formData.category,
+                amount: parseFloat(formData.amount),
+                date: Timestamp.fromDate(new Date(formData.expenseDate.replace(/-/g, '/'))),
+                description: formData.description,
+                invoiceUrl: invoiceUrl,
+            });
+
+            // Reset form
+            setFormData({
+                category: 'Rent',
+                amount: '',
+                expenseDate: new Date().toISOString().split('T')[0],
+                description: '',
+            });
+            setInvoiceFile(null);
+            // Add user feedback here e.g. a success message
+            
+        } catch (error) {
+            console.error("Error logging expense: ", error);
+            // Add user feedback for error
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-md p-6">
+            <h3 className="font-semibold text-xl mb-4 text-gray-800">Log Business Expense</h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <FormSelect label="Category" name="category" value={formData.category} onChange={handleChange}>
+                    <option>Rent</option>
+                    <option>Bills</option>
+                    <option>Materials</option>
+                    <option>Other</option>
+                </FormSelect>
+                <FormInput label="Amount (₺)" name="amount" type="number" placeholder="e.g., 500.00" value={formData.amount} onChange={handleChange} required />
+                <CustomDatePicker label="Expense Date" name="expenseDate" value={formData.expenseDate} onChange={handleChange} />
+                <FormInput label="Description" name="description" placeholder="e.g., Office supplies" value={formData.description} onChange={handleChange} required />
+                <div>
+                     <label className="block text-sm font-medium text-gray-700 mb-1">Invoice (Optional)</label>
+                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                        <div className="space-y-1 text-center">
+                            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+                            <div className="flex text-sm text-gray-600">
+                                <label htmlFor="invoice" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="invoice" name="invoice" type="file" className="sr-only" onChange={handleFileChange} /></label>
+                                <p className="pl-1">or drag and drop</p>
+                            </div>
+                            <p className="text-xs text-gray-500">{invoiceFile ? invoiceFile.name : 'PNG, JPG, PDF up to 10MB'}</p>
+                        </div>
+                    </div>
+                </div>
+                <div className="pt-4">
+                     <button type="submit" disabled={isSubmitting} className="w-full px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400">
+                        {isSubmitting ? 'Logging...' : 'Log Expense'}
+                    </button>
+                </div>
+            </form>
+        </div>
+    );
+};
+
 const FinancesModule = () => {
-    const [activeView, setActiveView] = useState('main'); // 'main', 'studentPayments', 'businessExpenses', 'personalExpenses'
+    const { students } = useContext(AppContext);
+    const [activeView, setActiveView] = useState('main');
     const [selectedStudent, setSelectedStudent] = useState(null);
+
+    useEffect(() => {
+        if (selectedStudent) {
+            const updatedStudent = students.find(s => s.id === selectedStudent.id);
+            if (updatedStudent) {
+                setSelectedStudent(updatedStudent);
+            }
+        }
+    }, [students, selectedStudent]);
 
     const handleStudentSelect = (student) => {
         setSelectedStudent(student);
@@ -1305,7 +1472,8 @@ const FinancesModule = () => {
         switch (activeView) {
             case 'studentPayments':
                 return <StudentPaymentsView onStudentSelect={handleStudentSelect} />;
-            // other cases for business/personal expenses
+            case 'businessExpenses':
+                return <BusinessExpensesView />;
             default:
                 return (
                     <>
@@ -1314,7 +1482,7 @@ const FinancesModule = () => {
                                 <Icon path={ICONS.STUDENTS} className="w-8 h-8 mr-4 text-blue-500"/>
                                 <h3 className="font-semibold text-xl text-gray-800">Student Payments</h3>
                             </button>
-                            <button onClick={() => { /* Logic for business expenses */ }} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
+                            <button onClick={() => setActiveView('businessExpenses')} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
                                 <Icon path={ICONS.BUILDING} className="w-8 h-8 mr-4 text-green-500"/>
                                 <h3 className="font-semibold text-xl text-gray-800">Business Expenses</h3>
                             </button>
