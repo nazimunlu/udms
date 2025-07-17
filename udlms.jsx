@@ -917,7 +917,7 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
                                     ))}
                                 </ul>
                              ) : (
-                                <p className="text-gray-500 text-center py-4">No lessons scheduled for this group yet.</p>
+                                <p className="text-center text-gray-500 py-4">No lessons scheduled for this group yet.</p>
                              )}
                         </div>
                     </FormSection>
@@ -1413,6 +1413,7 @@ const BusinessExpensesView = () => {
                 description: '',
             });
             setInvoiceFile(null);
+            document.getElementById('invoice').value = ''; // Clear file input
             setSubmitStatus('Success!');
             setTimeout(() => setSubmitStatus(''), 2000);
             
@@ -1497,6 +1498,120 @@ const BusinessExpensesView = () => {
     );
 };
 
+const PersonalExpensesView = () => {
+    const { db, userId, appId } = useContext(AppContext);
+    const [formData, setFormData] = useState({
+        category: 'Food',
+        amount: '',
+        expenseDate: new Date().toISOString().split('T')[0],
+        description: '',
+    });
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState('');
+    const [expenses, setExpenses] = useState([]);
+
+    useEffect(() => {
+        if (!userId || !appId) return;
+        const q = query(collection(db, 'artifacts', appId, 'users', userId, 'transactions'), where("type", "==", "expense-personal"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const expensesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            expensesData.sort((a, b) => b.date.toMillis() - a.date.toMillis());
+            setExpenses(expensesData);
+        });
+        return () => unsubscribe();
+    }, [db, userId, appId]);
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmitStatus('');
+        
+        try {
+            const transactionsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'transactions');
+            await addDoc(transactionsCollectionPath, {
+                type: 'expense-personal',
+                category: formData.category,
+                amount: parseFloat(formData.amount),
+                date: Timestamp.fromDate(new Date(formData.expenseDate.replace(/-/g, '/'))),
+                description: formData.description,
+            });
+
+            setFormData({
+                category: 'Food',
+                amount: '',
+                expenseDate: new Date().toISOString().split('T')[0],
+                description: '',
+            });
+            setSubmitStatus('Success!');
+            setTimeout(() => setSubmitStatus(''), 2000);
+            
+        } catch (error) {
+            console.error("Error logging expense: ", error);
+            setSubmitStatus('Error!');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="font-semibold text-xl mb-4 text-gray-800">Log Personal Expense</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <FormSelect label="Category" name="category" value={formData.category} onChange={handleChange}>
+                        <option>Food</option>
+                        <option>Clothing</option>
+                        <option>Subscriptions</option>
+                        <option>Other</option>
+                    </FormSelect>
+                    <FormInput label="Amount (₺)" name="amount" type="number" placeholder="e.g., 150.00" value={formData.amount} onChange={handleChange} required />
+                    <CustomDatePicker label="Expense Date" name="expenseDate" value={formData.expenseDate} onChange={handleChange} />
+                    <FormInput label="Description" name="description" placeholder="e.g., Weekly groceries" value={formData.description} onChange={handleChange} required />
+                    <div className="pt-4">
+                         <button type="submit" disabled={isSubmitting} className="w-full px-4 py-2 rounded-lg text-white bg-yellow-500 hover:bg-yellow-600 disabled:bg-yellow-300 transition-colors">
+                            {isSubmitting ? 'Logging...' : (submitStatus || 'Log Expense')}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div className="bg-white rounded-lg shadow-md">
+                <h3 className="font-semibold text-xl p-6 border-b border-gray-200">Logged Expenses</h3>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Date</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Category</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Description</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase text-right">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {expenses.length > 0 ? (
+                                expenses.map(expense => (
+                                    <tr key={expense.id} className="hover:bg-gray-50">
+                                        <td className="p-4 text-gray-600">{expense.date.toDate().toLocaleDateString()}</td>
+                                        <td className="p-4 text-gray-800">{expense.category}</td>
+                                        <td className="p-4 text-gray-800">{expense.description}</td>
+                                        <td className="p-4 text-gray-800 font-semibold text-right">₺{expense.amount.toFixed(2)}</td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr><td colSpan="4" className="p-4 text-center text-gray-500">No personal expenses logged yet.</td></tr>
+                            )}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+};
+
 const FinancesModule = () => {
     const { students } = useContext(AppContext);
     const [activeView, setActiveView] = useState('main');
@@ -1525,6 +1640,8 @@ const FinancesModule = () => {
                 return <StudentPaymentsView onStudentSelect={handleStudentSelect} />;
             case 'businessExpenses':
                 return <BusinessExpensesView />;
+            case 'personalExpenses':
+                return <PersonalExpensesView />;
             default:
                 return (
                     <>
@@ -1537,7 +1654,7 @@ const FinancesModule = () => {
                                 <Icon path={ICONS.BUILDING} className="w-8 h-8 mr-4 text-green-500"/>
                                 <h3 className="font-semibold text-xl text-gray-800">Business Expenses</h3>
                             </button>
-                             <button onClick={() => { /* Logic for personal expenses */ }} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
+                             <button onClick={() => setActiveView('personalExpenses')} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
                                 <Icon path={ICONS.SHOPPING_CART} className="w-8 h-8 mr-4 text-yellow-500"/>
                                 <h3 className="font-semibold text-xl text-gray-800">Personal Expenses</h3>
                             </button>
