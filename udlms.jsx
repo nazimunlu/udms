@@ -1259,6 +1259,57 @@ const WeeklyOverview = ({ events }) => {
     );
 };
 
+// --- FinancesModule.js ---
+const FinancesModule = () => {
+    return (
+        <div className="p-4 md:p-8">
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Finances</h2>
+                {/* Add button will go here later */}
+            </div>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Student Payments Card */}
+                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Student Payments</h3>
+                    <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        Track installments and payments for group and tutoring students.
+                    </p>
+                    <button className="w-full px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700">
+                        Manage Student Payments
+                    </button>
+                </div>
+                {/* Business Expenses Card */}
+                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                     <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Business Expenses</h3>
+                     <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        Log business-related expenses like rent, bills, and materials.
+                     </p>
+                     <button className="w-full px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700">
+                        Log Business Expense
+                    </button>
+                </div>
+                {/* Personal Expenses Card */}
+                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                     <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Personal Expenses</h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        Keep track of personal spending for budgeting purposes.
+                     </p>
+                     <button className="w-full px-4 py-2 rounded-lg text-white bg-yellow-500 hover:bg-yellow-600">
+                        Log Personal Expense
+                    </button>
+                </div>
+            </div>
+            <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Financial Overview</h3>
+                <p className="text-center text-gray-500 py-8">
+                    Charts and detailed financial analyses will be displayed here.
+                </p>
+            </div>
+        </div>
+    );
+};
+
+
 // Modal for logging a new generic event.
 function EventFormModal({ isOpen, onClose }) {
     const { db, userId, appId } = useContext(AppContext);
@@ -1332,8 +1383,6 @@ function EventFormModal({ isOpen, onClose }) {
 
 
 // --- PLACEHOLDER MODULES ---
-// These will be replaced with actual implementations later.
-const Finances = () => <div className="p-8 text-2xl font-bold text-gray-800 dark:text-gray-200">Finances Module (Under Construction)</div>;
 const Documents = () => <div className="p-8 text-2xl font-bold text-gray-800 dark:text-gray-200">Documents Module (Under Construction)</div>;
 
 
@@ -1446,7 +1495,7 @@ const Sidebar = ({ currentPage, setCurrentPage, isSidebarOpen }) => {
 
 // The header component, containing the theme toggle and mobile sidebar button.
 const Header = ({ toggleSidebar }) => {
-    const { isDarkMode, toggleTheme } = useContext(ThemeContext);
+    const { isDarkMode, toggleTheme } = useContext(AppContext);
     return (
         <header className="flex items-center justify-between md:justify-end h-16 px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700 flex-shrink-0">
             <button onClick={toggleSidebar} className="md:hidden text-gray-500 dark:text-gray-400">
@@ -1468,7 +1517,7 @@ const MainContent = ({ currentPage }) => {
             case 'dashboard': return <DashboardModule />;
             case 'students': return <StudentsModule />;
             case 'groups': return <GroupsModule />;
-            case 'finances': return <Finances />;
+            case 'finances': return <FinancesModule />;
             case 'documents': return <Documents />;
             case 'settings': return <SettingsModule />;
             default: return <DashboardModule />;
