@@ -1358,6 +1358,19 @@ const BusinessExpensesView = () => {
     });
     const [invoiceFile, setInvoiceFile] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState('');
+    const [expenses, setExpenses] = useState([]);
+
+    useEffect(() => {
+        if (!userId || !appId) return;
+        const q = query(collection(db, 'artifacts', appId, 'users', userId, 'transactions'), where("type", "==", "expense-business"));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const expensesData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            expensesData.sort((a, b) => b.date.toMillis() - a.date.toMillis());
+            setExpenses(expensesData);
+        });
+        return () => unsubscribe();
+    }, [db, userId, appId]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -1373,6 +1386,7 @@ const BusinessExpensesView = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
+        setSubmitStatus('');
         
         let invoiceUrl = '';
         try {
@@ -1392,7 +1406,6 @@ const BusinessExpensesView = () => {
                 invoiceUrl: invoiceUrl,
             });
 
-            // Reset form
             setFormData({
                 category: 'Rent',
                 amount: '',
@@ -1400,48 +1413,86 @@ const BusinessExpensesView = () => {
                 description: '',
             });
             setInvoiceFile(null);
-            // Add user feedback here e.g. a success message
+            setSubmitStatus('Success!');
+            setTimeout(() => setSubmitStatus(''), 2000);
             
         } catch (error) {
             console.error("Error logging expense: ", error);
-            // Add user feedback for error
+            setSubmitStatus('Error!');
         } finally {
             setIsSubmitting(false);
         }
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
-            <h3 className="font-semibold text-xl mb-4 text-gray-800">Log Business Expense</h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <FormSelect label="Category" name="category" value={formData.category} onChange={handleChange}>
-                    <option>Rent</option>
-                    <option>Bills</option>
-                    <option>Materials</option>
-                    <option>Other</option>
-                </FormSelect>
-                <FormInput label="Amount (₺)" name="amount" type="number" placeholder="e.g., 500.00" value={formData.amount} onChange={handleChange} required />
-                <CustomDatePicker label="Expense Date" name="expenseDate" value={formData.expenseDate} onChange={handleChange} />
-                <FormInput label="Description" name="description" placeholder="e.g., Office supplies" value={formData.description} onChange={handleChange} required />
-                <div>
-                     <label className="block text-sm font-medium text-gray-700 mb-1">Invoice (Optional)</label>
-                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                        <div className="space-y-1 text-center">
-                            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
-                            <div className="flex text-sm text-gray-600">
-                                <label htmlFor="invoice" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="invoice" name="invoice" type="file" className="sr-only" onChange={handleFileChange} /></label>
-                                <p className="pl-1">or drag and drop</p>
+        <div className="space-y-6">
+            <div className="bg-white rounded-lg shadow-md p-6">
+                <h3 className="font-semibold text-xl mb-4 text-gray-800">Log Business Expense</h3>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                    <FormSelect label="Category" name="category" value={formData.category} onChange={handleChange}>
+                        <option>Rent</option>
+                        <option>Bills</option>
+                        <option>Materials</option>
+                        <option>Other</option>
+                    </FormSelect>
+                    <FormInput label="Amount (₺)" name="amount" type="number" placeholder="e.g., 500.00" value={formData.amount} onChange={handleChange} required />
+                    <CustomDatePicker label="Expense Date" name="expenseDate" value={formData.expenseDate} onChange={handleChange} />
+                    <FormInput label="Description" name="description" placeholder="e.g., Office supplies" value={formData.description} onChange={handleChange} required />
+                    <div>
+                         <label className="block text-sm font-medium text-gray-700 mb-1">Invoice (Optional)</label>
+                         <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                            <div className="space-y-1 text-center">
+                                <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
+                                <div className="flex text-sm text-gray-600">
+                                    <label htmlFor="invoice" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="invoice" name="invoice" type="file" className="sr-only" onChange={handleFileChange} /></label>
+                                    <p className="pl-1">or drag and drop</p>
+                                </div>
+                                <p className="text-xs text-gray-500">{invoiceFile ? invoiceFile.name : 'PNG, JPG, PDF up to 10MB'}</p>
                             </div>
-                            <p className="text-xs text-gray-500">{invoiceFile ? invoiceFile.name : 'PNG, JPG, PDF up to 10MB'}</p>
                         </div>
                     </div>
+                    <div className="pt-4">
+                         <button type="submit" disabled={isSubmitting} className="w-full px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400 transition-colors">
+                            {isSubmitting ? 'Logging...' : (submitStatus || 'Log Expense')}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div className="bg-white rounded-lg shadow-md">
+                <h3 className="font-semibold text-xl p-6 border-b border-gray-200">Logged Expenses</h3>
+                <div className="overflow-x-auto">
+                    <table className="w-full text-left">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Date</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Category</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Description</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase text-right">Amount</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Invoice</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-200">
+                            {expenses.length > 0 ? (
+                                expenses.map(expense => (
+                                    <tr key={expense.id} className="hover:bg-gray-50">
+                                        <td className="p-4 text-gray-600">{expense.date.toDate().toLocaleDateString()}</td>
+                                        <td className="p-4 text-gray-800">{expense.category}</td>
+                                        <td className="p-4 text-gray-800">{expense.description}</td>
+                                        <td className="p-4 text-gray-800 font-semibold text-right">₺{expense.amount.toFixed(2)}</td>
+                                        <td className="p-4">
+                                            {expense.invoiceUrl ? (
+                                                <a href={expense.invoiceUrl} target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-blue-600 hover:underline">View</a>
+                                            ) : 'N/A'}
+                                        </td>
+                                    </tr>
+                                ))
+                            ) : (
+                                <tr><td colSpan="5" className="p-4 text-center text-gray-500">No business expenses logged yet.</td></tr>
+                            )}
+                        </tbody>
+                    </table>
                 </div>
-                <div className="pt-4">
-                     <button type="submit" disabled={isSubmitting} className="w-full px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400">
-                        {isSubmitting ? 'Logging...' : 'Log Expense'}
-                    </button>
-                </div>
-            </form>
+            </div>
         </div>
     );
 };
