@@ -5,7 +5,6 @@ import { getFirestore, setLogLevel, collection, onSnapshot, addDoc, doc, setDoc,
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
 
-
 // --- ICONS (using inline SVG for simplicity) ---
 const Icon = ({ path, className = "w-6 h-6" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={className}>
@@ -1498,7 +1497,7 @@ const StudentPaymentsView = ({ onStudentSelect }) => {
     );
 };
 
-const BusinessExpensesView = () => {
+const BusinessExpensesView = ({}) => {
     const { db, storage, userId, appId } = useContext(AppContext);
     const [formData, setFormData] = useState({
         category: 'Rent',
@@ -2145,7 +2144,7 @@ const DocumentsModule = () => {
         if (!userId || !appId) return;
         
         const transQuery = query(collection(db, 'artifacts', appId, 'users', userId, 'transactions'), where("invoiceUrl", "!=", ""));
-        const mebQuery = collection(db, 'artifacts', appId, 'users', userId, 'mebDocuments');
+        const mebQuery = collection(db, 'artifacts', appId, 'public', 'data', 'mebDocuments');
 
         const unsubTransactions = onSnapshot(transQuery, snapshot => {
             setTransactions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -2182,7 +2181,7 @@ const DocumentsModule = () => {
                 const transactionDocRef = doc(db, 'artifacts', appId, 'users', userId, 'transactions', id);
                 await updateDoc(transactionDocRef, { invoiceUrl: '' });
             } else if (type === 'meb') {
-                const mebDocRef = doc(db, 'artifacts', appId, 'users', userId, 'mebDocuments', id);
+                const mebDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'mebDocuments', id);
                 await deleteDoc(mebDocRef);
             }
         } catch (error) {
@@ -2267,12 +2266,12 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
         setIsUploading(true);
         
         try {
-            const filePath = `artifacts/${appId}/users/${userId}/mebDocuments/${Date.now()}_${file.name}`;
+            const filePath = `artifacts/${appId}/public/mebDocuments/${Date.now()}_${file.name}`;
             const storageRef = ref(storage, filePath);
             await uploadBytes(storageRef, file);
             const url = await getDownloadURL(storageRef);
 
-            const mebCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'mebDocuments');
+            const mebCollectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'mebDocuments');
             await addDoc(mebCollectionPath, {
                 documentName: docName,
                 fileUrl: url,
@@ -2335,16 +2334,122 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
 };
 
 
-const SettingsModule = () => (
-    <div className="p-4 md:p-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-6">Settings</h2>
-        <div className="bg-white p-6 rounded-lg shadow-md">
-            <p className="text-gray-600">
-                Future settings, such as data export and message templates, will be available here.
-            </p>
+const SettingsModule = () => {
+    const { students, groups, transactions, scriptsLoaded } = useContext(AppContext);
+    const [isExporting, setIsExporting] = useState(false);
+    const [messageType, setMessageType] = useState('latePayment');
+    const [selectedStudentId, setSelectedStudentId] = useState('');
+    const [generatedMessage, setGeneratedMessage] = useState('');
+    const [copySuccess, setCopySuccess] = useState('');
+
+    const handleExport = async () => {
+        if (!scriptsLoaded) {
+            alert("Export functionality is not ready yet. Please wait a moment and try again.");
+            return;
+        }
+        setIsExporting(true);
+        const zip = new window.JSZip();
+
+        // Add student and group data as JSON
+        zip.file("students.json", JSON.stringify(students, null, 2));
+        zip.file("groups.json", JSON.stringify(groups, null, 2));
+
+        // Create folders
+        const studentDocsFolder = zip.folder("student_documents");
+        const financeDocsFolder = zip.folder("finance_documents");
+        
+        // This is a simplified example. A full implementation would fetch each file's blob content.
+        students.forEach(s => {
+            if (s.documents?.nationalIdUrl) studentDocsFolder.file(`${s.fullName}_ID.txt`, "Link: " + s.documents.nationalIdUrl);
+            if (s.documents?.agreementUrl) studentDocsFolder.file(`${s.fullName}_Agreement.txt`, "Link: " + s.documents.agreementUrl);
+        });
+        transactions.forEach(t => {
+             if (t.invoiceUrl) financeDocsFolder.file(`${t.description.replace(/[^a-zA-Z0-9]/g, '_')}_invoice.txt`, "Link: " + t.invoiceUrl);
+        });
+
+        const content = await zip.generateAsync({ type: "blob" });
+        window.saveAs(content, "UDMS_Export.zip");
+        setIsExporting(false);
+    };
+    
+    useEffect(() => {
+        if (selectedStudentId) {
+            const student = students.find(s => s.id === selectedStudentId);
+            if (!student) return;
+
+            let message = '';
+            if (messageType === 'latePayment') {
+                const unpaid = student.installments?.find(i => i.status === 'Unpaid');
+                if (unpaid) {
+                    message = `Dear Parent of ${student.fullName},\n\nThis is a friendly reminder that installment #${unpaid.number} of ₺${unpaid.amount.toFixed(2)} was due on ${unpaid.dueDate.toDate().toLocaleDateString()}. Please arrange for payment at your earliest convenience.\n\nThank you,\nÜnlü Dil Kursu`;
+                } else {
+                    message = `Dear Parent of ${student.fullName},\n\nThank you for being up to date with all payments!\n\nBest regards,\nÜnlü Dil Kursu`;
+                }
+            } else if (messageType === 'studentAbsence') {
+                message = `Dear Parent of ${student.fullName},\n\nWe noticed that ${student.fullName} was absent from class today. Please let us know if everything is alright.\n\nBest regards,\nÜnlü Dil Kursu`;
+            }
+            setGeneratedMessage(message);
+        } else {
+            setGeneratedMessage('');
+        }
+    }, [selectedStudentId, messageType, students]);
+    
+    const handleCopy = () => {
+        const textArea = document.createElement("textarea");
+        textArea.value = generatedMessage;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            setCopySuccess('Copied!');
+            setTimeout(() => setCopySuccess(''), 2000);
+        } catch (err) {
+            setCopySuccess('Failed to copy!');
+        }
+        document.body.removeChild(textArea);
+    };
+
+    return (
+        <div className="p-4 md:p-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Settings</h2>
+            <div className="space-y-8">
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Data Export</h3>
+                    <p className="text-gray-600 mb-4">Export all student data, group details, and uploaded documents into a single .zip file.</p>
+                    <button onClick={handleExport} disabled={isExporting || !scriptsLoaded} className="flex items-center justify-center px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed">
+                        <Icon path={ICONS.DOWNLOAD} className="w-5 h-5 mr-2"/>
+                        {isExporting ? 'Exporting...' : 'Export All Data'}
+                    </button>
+                    {!scriptsLoaded && <p className="text-xs text-gray-500 mt-2">Preparing export tools...</p>}
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Message Generator</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <FormSelect label="Message Type" value={messageType} onChange={e => setMessageType(e.target.value)}>
+                            <option value="latePayment">Late Payment</option>
+                            <option value="studentAbsence">Student Absence</option>
+                        </FormSelect>
+                        <FormSelect label="Select Student" value={selectedStudentId} onChange={e => setSelectedStudentId(e.target.value)}>
+                            <option value="">-- Select a student --</option>
+                            {students.map(s => <option key={s.id} value={s.id}>{s.fullName}</option>)}
+                        </FormSelect>
+                    </div>
+                    <div className="mt-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">Generated Message</label>
+                        <textarea value={generatedMessage} onChange={e => setGeneratedMessage(e.target.value)} rows="6" className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                    </div>
+                    <div className="mt-4">
+                        <button onClick={handleCopy} disabled={!generatedMessage} className="px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400">
+                            {copySuccess || 'Copy Message'}
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
-    </div>
-);
+    );
+};
+
 
 
 // --- LAYOUT COMPONENTS ---
@@ -2409,6 +2514,7 @@ export default function App() {
     const [groups, setGroups] = useState([]);
     const [students, setStudents] = useState([]);
     const [transactions, setTransactions] = useState([]);
+    const [scriptsLoaded, setScriptsLoaded] = useState(false);
 
     useEffect(() => {
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -2428,7 +2534,26 @@ export default function App() {
             setUser(user);
             setAuthReady(true);
         });
-        return () => unsubscribe();
+        
+        // Load external scripts for export functionality
+        const script1 = document.createElement('script');
+        script1.src = 'https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        script1.async = true;
+        document.body.appendChild(script1);
+
+        const script2 = document.createElement('script');
+        script2.src = 'https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js';
+        script2.async = true;
+        script2.onload = () => {
+            setScriptsLoaded(true);
+        };
+        document.body.appendChild(script2);
+
+        return () => {
+            unsubscribe();
+            document.body.removeChild(script1);
+            document.body.removeChild(script2);
+        };
     }, []);
 
     useEffect(() => {
@@ -2463,7 +2588,7 @@ export default function App() {
     }
 
     return (
-        <AppContext.Provider value={{ db, storage, auth, userId: user.uid, appId, groups, students, transactions }}>
+        <AppContext.Provider value={{ db, storage, auth, userId: user.uid, appId, groups, students, transactions, scriptsLoaded }}>
             <div className="flex h-screen font-sans text-gray-900 bg-gray-100">
                 <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isSidebarOpen={isSidebarOpen}/>
                 <div className="flex flex-col flex-1 min-w-0">
