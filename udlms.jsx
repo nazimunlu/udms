@@ -36,6 +36,8 @@ const ICONS = {
     EYE_OFF: "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 9.93 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z",
     DOWNLOAD: "M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z",
     UPLOAD: "M9 16h6v-6h4l-8-8-8 8h4v6zm-4 2h14v2H5v-2z",
+    INFO: "M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z",
+    CAKE: "M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm6 3h-5.07c-.09-.24-.19-.48-.29-.71L12 7l-.64 1.29c-.1.23-.2.47-.29.71H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zm-6 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z",
 };
 
 // --- FIREBASE CONFIGURATION ---
@@ -285,22 +287,20 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
             return '';
         };
 
-        const initialEnrollmentDate = getSafeDateString(studentToEdit?.enrollmentDate) || new Date().toISOString().split('T')[0];
-        const initialTutorDetails = studentToEdit?.tutoringDetails || {};
-
         return {
             fullName: studentToEdit?.fullName || '',
             studentContact: studentToEdit?.studentContact || '',
             parentContact: studentToEdit?.parentContact || '',
-            enrollmentDate: initialEnrollmentDate,
+            enrollmentDate: getSafeDateString(studentToEdit?.enrollmentDate) || new Date().toISOString().split('T')[0],
+            birthDate: getSafeDateString(studentToEdit?.birthDate) || '',
             isTutoring: studentToEdit?.isTutoring || false,
             groupId: studentToEdit?.groupId || null,
             documents: studentToEdit?.documents || { nationalIdUrl: '', agreementUrl: '' },
             feeDetails: studentToEdit?.feeDetails || { totalFee: '12000', numberOfInstallments: '3' },
-            tutoringDetails: {
-                hourlyRate: initialTutorDetails.hourlyRate || '',
-                endDate: getSafeDateString(initialTutorDetails.endDate),
-                schedule: initialTutorDetails.schedule || { days: [], startTime: '09:00', endTime: '10:00' }
+            tutoringDetails: studentToEdit?.tutoringDetails || {
+                hourlyRate: '',
+                endDate: '',
+                schedule: { days: [], startTime: '09:00', endTime: '10:00' }
             },
             installments: studentToEdit?.installments || []
         };
@@ -409,6 +409,7 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
             };
 
             dataToSave.enrollmentDate = toTimestamp(dataToSave.enrollmentDate);
+            dataToSave.birthDate = toTimestamp(dataToSave.birthDate);
             if (dataToSave.tutoringDetails.endDate) {
                 dataToSave.tutoringDetails.endDate = toTimestamp(dataToSave.tutoringDetails.endDate);
             } else {
@@ -441,7 +442,10 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
                     <div className="sm:col-span-3">
                         <CustomDatePicker label="Enrollment Date" name="enrollmentDate" value={formData.enrollmentDate} onChange={handleChange} />
                     </div>
-                    <div className="sm:col-span-3 flex items-end pb-1">
+                     <div className="sm:col-span-3">
+                        <CustomDatePicker label="Birth Date (Optional)" name="birthDate" value={formData.birthDate} onChange={handleChange} />
+                    </div>
+                    <div className="sm:col-span-6 flex items-center pt-2">
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="isTutoring" checked={formData.isTutoring} onChange={handleChange} className="sr-only peer" />
                             <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -533,6 +537,8 @@ const StudentsModule = () => {
     const [studentToEdit, setStudentToEdit] = useState(null);
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);
+    const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
+    const [studentToView, setStudentToView] = useState(null);
 
     useEffect(() => {
         if (!userId || !appId) return;
@@ -569,6 +575,7 @@ const StudentsModule = () => {
 
     const openAddModal = () => { setStudentToEdit(null); setIsFormModalOpen(true); };
     const openEditModal = (student) => { setStudentToEdit(student); setIsFormModalOpen(true); };
+    const openDetailsModal = (student) => { setStudentToView(student); setIsDetailsModalOpen(true); };
     const filteredStudents = students.filter(s => activeTab === 'group' ? !s.isTutoring : s.isTutoring);
 
     return (
@@ -605,6 +612,7 @@ const StudentsModule = () => {
                                         <td className="p-4 text-gray-600">{student.enrollmentDate?.toDate().toLocaleDateString()}</td>
                                         <td className="p-4">
                                             <div className="flex space-x-2">
+                                                <button onClick={() => openDetailsModal(student)} className="p-2 text-gray-600 hover:text-blue-800 rounded-full hover:bg-gray-200"><Icon path={ICONS.INFO} className="w-5 h-5" /></button>
                                                 <button onClick={() => openEditModal(student)} className="p-2 text-blue-600 hover:text-blue-800 rounded-full hover:bg-gray-200"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
                                                 <button onClick={() => openDeleteConfirmation(student)} className="p-2 text-red-600 hover:text-red-800 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
                                             </div>
@@ -620,9 +628,114 @@ const StudentsModule = () => {
             </div>
             <StudentFormModal isOpen={isFormModalOpen} onClose={() => setIsFormModalOpen(false)} studentToEdit={studentToEdit} />
             <ConfirmationModal isOpen={isConfirmModalOpen} onClose={() => setIsConfirmModalOpen(false)} onConfirm={handleDeleteStudent} title="Delete Student" message={`Are you sure you want to delete ${studentToDelete?.fullName}? This action cannot be undone.`} />
+            {studentToView && <StudentDetailsModal isOpen={isDetailsModalOpen} onClose={() => setIsDetailsModalOpen(false)} student={studentToView} />}
         </div>
     );
 };
+
+const StudentDetailsModal = ({ isOpen, onClose, student }) => {
+    const { db, userId, appId, groups } = useContext(AppContext);
+    const [activeTab, setActiveTab] = useState('general');
+    const [lessons, setLessons] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        if (!student?.groupId) {
+            setIsLoading(false);
+            return;
+        }
+        setIsLoading(true);
+        const lessonsQuery = query(collection(db, 'artifacts', appId, 'users', userId, 'lessons'), where("groupId", "==", student.groupId));
+        const unsubscribe = onSnapshot(lessonsQuery, (snapshot) => {
+            const lessonsData = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
+            lessonsData.sort((a,b) => a.lessonDate.toMillis() - b.lessonDate.toMillis());
+            setLessons(lessonsData);
+            setIsLoading(false);
+        });
+        return unsubscribe;
+    }, [db, userId, appId, student?.groupId]);
+    
+    const groupName = student.groupId ? groups.find(g => g.id === student.groupId)?.groupName : 'N/A';
+    
+    const getAttendanceStatus = (status) => {
+        const baseClasses = "px-2 py-1 text-xs font-semibold rounded-full";
+        switch(status) {
+            case 'present': return <span className={`${baseClasses} bg-green-100 text-green-800`}>Present</span>;
+            case 'absent': return <span className={`${baseClasses} bg-red-100 text-red-800`}>Absent</span>;
+            case 'late': return <span className={`${baseClasses} bg-yellow-100 text-yellow-800`}>Late</span>;
+            default: return <span className={`${baseClasses} bg-gray-100 text-gray-800`}>N/A</span>;
+        }
+    };
+
+    const modalTitle = (
+        <div>
+            <h3 className="text-xl font-bold text-gray-800">{student.fullName}</h3>
+            <p className="text-sm text-gray-500">Student Details</p>
+        </div>
+    );
+    
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} title={modalTitle}>
+            <div className="mb-4 border-b border-gray-200">
+                <nav className="flex space-x-4" aria-label="Tabs">
+                    <button onClick={() => setActiveTab('general')} className={`-mb-px px-3 py-2 font-medium text-sm border-b-2 ${activeTab === 'general' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>General Info</button>
+                    <button onClick={() => setActiveTab('payments')} className={`-mb-px px-3 py-2 font-medium text-sm border-b-2 ${activeTab === 'payments' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Payments</button>
+                    <button onClick={() => setActiveTab('attendance')} className={`-mb-px px-3 py-2 font-medium text-sm border-b-2 ${activeTab === 'attendance' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Attendance</button>
+                </nav>
+            </div>
+            
+            {activeTab === 'general' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="font-medium text-gray-500">Student Contact:</div><div className="text-gray-800">{student.studentContact}</div>
+                    <div className="font-medium text-gray-500">Parent Contact:</div><div className="text-gray-800">{student.parentContact || 'N/A'}</div>
+                    <div className="font-medium text-gray-500">Enrollment Date:</div><div className="text-gray-800">{student.enrollmentDate?.toDate().toLocaleDateString()}</div>
+                    <div className="font-medium text-gray-500">Birth Date:</div><div className="text-gray-800">{student.birthDate ? student.birthDate.toDate().toLocaleDateString() : 'N/A'}</div>
+                    <div className="font-medium text-gray-500">Student Type:</div><div className="text-gray-800">{student.isTutoring ? 'Tutoring' : 'Group'}</div>
+                    {!student.isTutoring && <><div className="font-medium text-gray-500">Group:</div><div className="text-gray-800">{groupName}</div></>}
+                </div>
+            )}
+
+            {activeTab === 'payments' && (
+                 <ul className="divide-y divide-gray-200">
+                    {(student.installments || []).map(inst => (
+                        <li key={inst.number} className="py-3 flex justify-between items-center">
+                            <div>
+                                <p className="font-medium text-gray-800">Installment #{inst.number}</p>
+                                <p className="text-sm text-gray-500">Due: {inst.dueDate.toDate().toLocaleDateString()}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="font-semibold text-gray-800">₺{inst.amount.toFixed(2)}</p>
+                                {inst.status === 'Paid' ? (
+                                     <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Paid</span>
+                                ) : (
+                                     <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Unpaid</span>
+                                )}
+                            </div>
+                        </li>
+                    ))}
+                    {(student.installments || []).length === 0 && <p className="text-center text-gray-500 py-4">No payment plan found for this student.</p>}
+                </ul>
+            )}
+
+            {activeTab === 'attendance' && (
+                isLoading ? <p>Loading attendance...</p> :
+                <ul className="divide-y divide-gray-200">
+                    {lessons.map(lesson => (
+                        <li key={lesson.id} className="py-3 flex justify-between items-center">
+                             <div>
+                                <p className="font-medium text-gray-800">{lesson.topic}</p>
+                                <p className="text-sm text-gray-500">{lesson.lessonDate.toDate().toLocaleDateString()}</p>
+                            </div>
+                            {getAttendanceStatus(lesson.attendance?.[student.id])}
+                        </li>
+                    ))}
+                    {lessons.length === 0 && <p className="text-center text-gray-500 py-4">No lessons found for this student's group.</p>}
+                </ul>
+            )}
+        </Modal>
+    );
+};
+
 
 // --- GroupsModule.js ---
 const GroupsModule = () => {
@@ -1041,28 +1154,50 @@ const DashboardModule = () => {
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekStart.getDate() + 7);
 
-        const getSortableTime = (item) => (item.type === 'lesson' ? item.lessonDate : item.startTime)?.toMillis() || 0;
+        const getSortableTime = (item) => (item.startTime)?.toMillis() || 0;
+
+        const processAllEvents = () => {
+            const allItems = [...(window.lessons || []), ...(window.events || []), ...(window.birthdays || [])];
+            
+            setTodaysSchedule(allItems.filter(i => getSortableTime(i) >= todayStart.getTime() && getSortableTime(i) <= todayEnd.getTime()).sort((a,b) => getSortableTime(a) - getSortableTime(b)));
+            setWeekEvents(allItems.filter(i => getSortableTime(i) >= weekStart.getTime() && getSortableTime(i) < weekEnd.getTime()));
+            setUpcomingEvents(allItems.filter(i => getSortableTime(i) >= todayStart.getTime()).sort((a,b) => getSortableTime(a) - getSortableTime(b)));
+        };
 
         const unsubLessons = onSnapshot(query(collection(db, 'artifacts', appId, 'users', userId, 'lessons'), where("lessonDate", ">=", todayStart)), (snapshot) => {
-            const allLessons = snapshot.docs.map(doc => ({id: doc.id, type: 'lesson', ...doc.data()}));
-            setTodaysSchedule(current => [...current.filter(i => i.type !== 'lesson'), ...allLessons.filter(l => getSortableTime(l) <= todayEnd.getTime())].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
-            setWeekEvents(current => [...current.filter(i => i.type !== 'lesson'), ...allLessons.filter(l => getSortableTime(l) < weekEnd.getTime())]);
-            setUpcomingEvents(current => [...current.filter(i => i.type !== 'lesson'), ...allLessons].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
+            window.lessons = snapshot.docs.map(doc => ({id: doc.id, type: 'lesson', topic: doc.data().topic, startTime: doc.data().lessonDate }));
+            processAllEvents();
         });
 
         const unsubEvents = onSnapshot(query(collection(db, 'artifacts', appId, 'users', userId, 'events'), where("startTime", ">=", todayStart)), (snapshot) => {
-            const allEvents = snapshot.docs.map(doc => ({id: doc.id, type: 'event', ...doc.data()}));
-            setTodaysSchedule(current => [...current.filter(i => i.type !== 'event'), ...allEvents.filter(e => getSortableTime(e) <= todayEnd.getTime())].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
-            setWeekEvents(current => [...current.filter(i => i.type !== 'event'), ...allEvents.filter(e => getSortableTime(e) < weekEnd.getTime())]);
-            setUpcomingEvents(current => [...current.filter(i => i.type !== 'event'), ...allEvents].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
+            window.events = snapshot.docs.map(doc => ({id: doc.id, type: 'event', ...doc.data()}));
+            processAllEvents();
         });
+        
+        // Process birthdays from context
+        const currentYear = new Date().getFullYear();
+        window.birthdays = students.filter(s => s.birthDate).map(s => {
+            const birthDate = s.birthDate.toDate();
+            let nextBirthday = new Date(currentYear, birthDate.getMonth(), birthDate.getDate());
+            if (nextBirthday < todayStart) {
+                nextBirthday.setFullYear(currentYear + 1);
+            }
+            return {
+                id: `bday-${s.id}`,
+                type: 'birthday',
+                eventName: `${s.fullName}'s Birthday`,
+                startTime: Timestamp.fromDate(nextBirthday)
+            };
+        });
+        processAllEvents();
+
 
         return () => {
             unsubLessons();
             unsubEvents();
         }
 
-    }, [db, userId, appId]);
+    }, [db, userId, appId, students]);
 
     return (
         <div className="p-4 md:p-8">
@@ -1093,10 +1228,10 @@ const DashboardModule = () => {
                         <ul className="space-y-3">
                             {todaysSchedule.map(item => (
                                 <li key={item.id} className="flex items-center">
-                                    <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
+                                    <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : item.type === 'birthday' ? 'bg-pink-500' : 'bg-green-500'}`}></div>
                                     <div>
                                         <p className="font-medium text-gray-800">{item.type === 'lesson' ? item.topic : item.eventName}</p>
-                                        <p className="text-sm text-gray-500">{item.type === 'lesson' ? item.lessonDate.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : item.startTime.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
+                                        <p className="text-sm text-gray-500">{item.startTime.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
                                     </div>
                                 </li>
                             ))}
@@ -1111,10 +1246,10 @@ const DashboardModule = () => {
                         <ul className="space-y-3">
                             {upcomingEvents.slice(0, 5).map((item, index) => (
                                 <li key={item.id} className={`p-2 rounded-md flex items-center ${index === 0 ? 'bg-blue-100' : ''}`}>
-                                     <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
+                                     <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : item.type === 'birthday' ? 'bg-pink-500' : 'bg-green-500'}`}></div>
                                     <div>
                                         <p className="font-medium text-gray-800">{item.type === 'lesson' ? item.topic : item.eventName}</p>
-                                        <p className="text-sm text-gray-500">{item.type === 'lesson' ? item.lessonDate.toDate().toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit'}) : item.startTime.toDate().toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit'})}</p>
+                                        <p className="text-sm text-gray-500">{item.startTime.toDate().toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric'})}</p>
                                     </div>
                                 </li>
                             ))}
@@ -1151,6 +1286,15 @@ const WeeklyOverview = ({ events }) => {
     const getDayIndex = (date) => (date.getDay() + 6) % 7; 
     const todayIndex = getDayIndex(new Date());
     
+    const getEventColor = (type) => {
+        switch(type) {
+            case 'lesson': return 'rgb(59, 130, 246)';
+            case 'birthday': return 'rgb(236, 72, 153)';
+            case 'event': return 'rgb(16, 185, 129)';
+            default: return 'rgb(107, 114, 128)';
+        }
+    }
+    
     return (
         <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <div className="grid grid-cols-[auto_repeat(7,_minmax(0,_1fr))]">
@@ -1175,7 +1319,7 @@ const WeeklyOverview = ({ events }) => {
                     ))}
 
                     {events.map(event => {
-                        const startTime = event.type === 'lesson' ? event.lessonDate.toDate() : event.startTime.toDate();
+                        const startTime = event.startTime.toDate();
                         const endTime = event.type === 'lesson' 
                             ? new Date(startTime.getTime() + 2 * 60 * 60 * 1000)
                             : (event.endTime ? event.endTime.toDate() : new Date(startTime.getTime() + 1 * 60 * 60 * 1000));
@@ -1185,7 +1329,7 @@ const WeeklyOverview = ({ events }) => {
                         const startHour = startTime.getHours() + startTime.getMinutes() / 60;
                         const endHour = endTime.getHours() + endTime.getMinutes() / 60;
                         
-                        if (endHour < 8 || startHour > 23) return null;
+                        if (endHour < 8 || startHour > 23 || event.type === 'birthday') return null;
 
                         const top = ((Math.max(startHour, 8) - 8) / hours.length) * 100;
                         const height = ((Math.min(endHour, 24) - Math.max(startHour, 8)) / hours.length) * 100;
@@ -1199,7 +1343,7 @@ const WeeklyOverview = ({ events }) => {
                                     height: `${height}%`,
                                     left: `${left}%`,
                                     width: `calc(${width}% - 2px)`,
-                                    backgroundColor: event.type === 'lesson' ? 'rgb(59, 130, 246)' : 'rgb(16, 185, 129)' 
+                                    backgroundColor: getEventColor(event.type)
                                  }}>
                                 <p className="font-bold truncate w-full">{event.type === 'lesson' ? event.topic : event.eventName}</p>
                                 <p className="text-white/80 truncate w-full">{startTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} - {endTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
