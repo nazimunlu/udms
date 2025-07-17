@@ -1178,7 +1178,6 @@ const DashboardModule = () => {
 
 // Component to render the weekly calendar view.
 const WeeklyOverview = ({ events }) => {
-    // UPDATED: Hours now go from 8:00 to 23:00.
     const hours = Array.from({ length: 16 }, (_, i) => i + 8); 
     
     const today = new Date();
@@ -1211,7 +1210,6 @@ const WeeklyOverview = ({ events }) => {
                 <div className="col-start-1 col-span-1 row-start-2 grid" style={{gridTemplateRows: `repeat(${hours.length}, minmax(0, 1fr))`}}>
                      {hours.map(hour => (
                         <div key={hour} className="h-16 text-right pr-2 border-t border-gray-200 dark:border-gray-600 flex items-start justify-end pt-1">
-                            {/* UPDATED: Darker color for time increments */}
                             <span className="text-sm text-gray-700 dark:text-gray-300 -mt-2">{`${hour.toString().padStart(2, '0')}:00`}</span>
                         </div>
                     ))}
@@ -1248,7 +1246,8 @@ const WeeklyOverview = ({ events }) => {
                                     height: `${height}%`,
                                     left: `${left}%`,
                                     width: `calc(${width}% - 2px)`,
-                                    backgroundColor: event.type === 'lesson' ? 'rgba(59, 130, 246, 0.8)' : 'rgba(16, 185, 129, 0.8)' 
+                                    // UPDATED: Opacity removed for solid colors
+                                    backgroundColor: event.type === 'lesson' ? 'rgb(59, 130, 246)' : 'rgb(16, 185, 129)' 
                                  }}>
                                 <p className="font-bold truncate w-full">{event.type === 'lesson' ? event.topic : event.eventName}</p>
                                 <p className="text-white/80 truncate w-full">{startTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} - {endTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
