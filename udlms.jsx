@@ -18,8 +18,6 @@ const ICONS = {
     FINANCES: "M5 8v10h14V8H5zm16-4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 14H5V8h14v10z",
     DOCUMENTS: "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z",
     SETTINGS: "M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19-.15-.24-.42.12-.64l2 3.46c.12-.22.39.3.61-.22l2.49-1c.52.4 1.08.73 1.69-.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59-1.69-.98l2.49 1c.23.09.49 0 .61-.22l2 3.46c.12-.22-.07.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z",
-    SUN: "M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.64 6.36c-.39-.39-1.02-.39-1.41 0s-.39 1.02 0 1.41l1.41 1.41c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41L5.64 6.36zm12.73 12.73c-.39-.39-1.02-.39-1.41 0s-.39 1.02 0 1.41l1.41 1.41c.39.39 1.02.39 1.41 0s.39-1.02 0-1.41l-1.41-1.41zM5.64 19.07c.39-.39.39-1.02 0-1.41s-1.02-.39-1.41 0l-1.41 1.41c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0l1.41-1.41zm12.73-12.73c.39-.39.39-1.02 0-1.41s-1.02-.39-1.41 0l-1.41 1.41c-.39.39-.39 1.02 0 1.41s1.02.39 1.41 0l1.41-1.41z",
-    MOON: "M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9 9-4.03 9-9c0-0.46-0.04-0.92-0.1-1.36-.98 1.37-2.58 2.26-4.4 2.26-2.98 0-5.4-2.42-5.4-5.4 0-1.81 0.89-3.42 2.26-4.4C12.92 3.04 12.46 3 12 3Z",
     MENU: "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z",
     DELETE: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
     EDIT: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z",
@@ -30,10 +28,11 @@ const ICONS = {
     CHEVRON_LEFT: "M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z",
     CHEVRON_RIGHT: "M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z",
     REMOVE_CIRCLE: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z",
+    BUILDING: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z",
+    SHOPPING_CART: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z",
 };
 
 // --- FIREBASE CONFIGURATION ---
-// This configuration is provided by the environment.
 const firebaseConfigString = typeof __firebase_config !== 'undefined' ? __firebase_config : '{}';
 let firebaseConfig = {};
 try {
@@ -42,33 +41,15 @@ try {
     console.error("Could not parse Firebase config:", e);
 }
 
-// Initialize Firebase services
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const storage = getStorage(app);
-// setLogLevel('debug'); // Uncomment for detailed Firestore logs
 
-// --- APP & THEME CONTEXT ---
-const ThemeContext = createContext();
+// --- APP CONTEXT ---
 const AppContext = createContext();
 
-// ThemeProvider manages the dark/light mode state of the application.
-const ThemeProvider = ({ children }) => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
-    const toggleTheme = () => setIsDarkMode(!isDarkMode);
-    useEffect(() => {
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [isDarkMode]);
-    return <ThemeContext.Provider value={{ isDarkMode, toggleTheme }}>{children}</ThemeContext.Provider>;
-};
-
 // --- HOOKS ---
-// Custom hook to detect clicks outside a specified element.
 const useClickOutside = (ref, handler) => {
     useEffect(() => {
         const listener = (event) => {
@@ -88,19 +69,18 @@ const useClickOutside = (ref, handler) => {
 
 
 // --- REUSABLE UI COMPONENTS ---
-// A generic Modal component for displaying pop-up content.
 const Modal = ({ isOpen, onClose, title, children }) => {
     if (!isOpen) return null;
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60" onClick={onClose}>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
-                <div className="flex items-center justify-between p-4 border-b dark:border-gray-700 sticky top-0 bg-white dark:bg-gray-800 z-10">
+            <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
+                <div className="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
                     {typeof title === 'string' ? (
-                        <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">{title}</h3>
+                        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
                     ) : (
                         <div>{title}</div>
                     )}
-                    <button onClick={onClose} className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"><Icon path={ICONS.CLOSE} /></button>
+                    <button onClick={onClose} className="p-2 rounded-full text-gray-500 hover:bg-gray-200"><Icon path={ICONS.CLOSE} /></button>
                 </div>
                 <div className="p-6 overflow-y-auto">{children}</div>
             </div>
@@ -108,58 +88,52 @@ const Modal = ({ isOpen, onClose, title, children }) => {
     );
 };
 
-// A confirmation dialog for destructive actions.
 const ConfirmationModal = ({ isOpen, onClose, onConfirm, title, message }) => {
     if (!isOpen) return null;
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={title}>
-            <p className="text-gray-700 dark:text-gray-300 mb-6">{message}</p>
+            <p className="text-gray-700 mb-6">{message}</p>
             <div className="flex justify-end space-x-4">
-                <button onClick={onClose} className="px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500">Cancel</button>
+                <button onClick={onClose} className="px-4 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
                 <button onClick={onConfirm} className="px-4 py-2 rounded-lg text-white bg-red-600 hover:bg-red-700">Confirm</button>
             </div>
         </Modal>
     );
 };
 
-// A standardized form input component.
 const FormInput = ({ label, icon, ...props }) => (
     <div>
-        {label && <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>}
+        {label && <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
         <div className="relative">
-            <input {...props} className={`block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${icon ? 'pr-10' : ''}`} />
+            <input {...props} className={`block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm ${icon ? 'pr-10' : ''}`} />
             {icon && <span className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">{icon}</span>}
         </div>
     </div>
 );
 
-// A standardized form select dropdown.
 const FormSelect = ({ label, children, ...props }) => (
      <div>
-        {label && <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>}
-        <select {...props} className="block w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+        {label && <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>}
+        <select {...props} className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
             {children}
         </select>
     </div>
 );
 
-// A component to structure forms into logical sections.
 const FormSection = ({ title, children }) => (
-    <fieldset className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-6">
-        <legend className="text-lg font-medium text-gray-900 dark:text-gray-100">{title}</legend>
+    <fieldset className="mt-6 border-t border-gray-200 pt-6">
+        <legend className="text-lg font-medium text-gray-900">{title}</legend>
         <div className="mt-4 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">{children}</div>
     </fieldset>
 );
 
-// A custom date picker component with a calendar interface.
 const CustomDatePicker = ({ label, value, onChange, name }) => {
     const [isOpen, setIsOpen] = useState(false);
     
-    // Safely gets a Date object from various possible input types.
     const getInitialDate = (v) => {
         if (v && typeof v.toDate === 'function') return v.toDate();
         if (v instanceof Date) return v;
-        if (typeof v === 'string' && v) return new Date(v.replace(/-/g, '/')); // More robust parsing
+        if (typeof v === 'string' && v) return new Date(v.replace(/-/g, '/'));
         return new Date();
     };
 
@@ -167,7 +141,6 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
     const pickerRef = useRef(null);
     useClickOutside(pickerRef, () => setIsOpen(false));
 
-    // Update the calendar display date when the value prop changes or the picker is opened.
     useEffect(() => {
         setDisplayDate(getInitialDate(value));
     }, [value, isOpen]);
@@ -175,7 +148,6 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
     const daysOfWeek = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
     const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
-    // Calculates the first day of the month (0 for Monday, 6 for Sunday).
     const getFirstDayOfMonth = (date) => {
         const day = new Date(date.getFullYear(), date.getMonth(), 1).getDay();
         return (day + 6) % 7; 
@@ -188,7 +160,6 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
         setDisplayDate(prev => new Date(prev.getFullYear(), prev.getMonth() + offset, 1));
     };
 
-    // Handles date selection and formats it to YYYY-MM-DD.
     const handleSelectDate = (day) => {
         const selected = new Date(displayDate.getFullYear(), displayDate.getMonth(), day);
         const year = selected.getFullYear();
@@ -199,7 +170,6 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
         setIsOpen(false);
     };
 
-    // Parse the selected date string back to a Date object for comparison.
     let selectedDateObj = null;
     if (value && typeof value === 'string') {
         const [year, month, day] = value.split('-').map(Number);
@@ -220,14 +190,14 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
                 className="cursor-pointer"
             />
             {isOpen && (
-                <div className="absolute z-20 mt-1 w-80 bg-white dark:bg-gray-700 shadow-lg rounded-lg p-4 border dark:border-gray-600">
+                <div className="absolute z-20 mt-1 w-80 bg-white shadow-lg rounded-lg p-4 border border-gray-200">
                     <div className="flex justify-between items-center mb-4">
-                        <button type="button" onClick={() => changeMonth(-1)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"><Icon path={ICONS.CHEVRON_LEFT} /></button>
-                        <span className="font-semibold text-gray-800 dark:text-gray-200">{monthNames[displayDate.getMonth()]} {displayDate.getFullYear()}</span>
-                        <button type="button" onClick={() => changeMonth(1)} className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-600"><Icon path={ICONS.CHEVRON_RIGHT} /></button>
+                        <button type="button" onClick={() => changeMonth(-1)} className="p-1 rounded-full hover:bg-gray-100"><Icon path={ICONS.CHEVRON_LEFT} /></button>
+                        <span className="font-semibold text-gray-800">{monthNames[displayDate.getMonth()]} {displayDate.getFullYear()}</span>
+                        <button type="button" onClick={() => changeMonth(1)} className="p-1 rounded-full hover:bg-gray-100"><Icon path={ICONS.CHEVRON_RIGHT} /></button>
                     </div>
                     <div className="grid grid-cols-7 gap-1 text-center text-sm">
-                        {daysOfWeek.map(day => <div key={day} className="font-medium text-gray-500 dark:text-gray-400">{day}</div>)}
+                        {daysOfWeek.map(day => <div key={day} className="font-medium text-gray-500">{day}</div>)}
                         {Array.from({ length: firstDayOfMonth }).map((_, i) => <div key={`empty-${i}`}></div>)}
                         {Array.from({ length: daysInMonth }).map((_, day) => {
                             const dayNumber = day + 1;
@@ -239,8 +209,8 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
                                 <div key={dayNumber} onClick={() => handleSelectDate(dayNumber)} 
                                      className={`p-2 rounded-full cursor-pointer 
                                      ${isSelected ? 'bg-blue-600 text-white' : 
-                                     isToday ? 'bg-blue-200 dark:bg-blue-800 text-blue-700 dark:text-blue-200' : 
-                                     'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600'}`}>
+                                     isToday ? 'bg-blue-200 text-blue-700' : 
+                                     'text-gray-700 hover:bg-gray-100'}`}>
                                     {dayNumber}
                                 </div>
                             );
@@ -252,7 +222,6 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
     );
 };
 
-// A custom time picker component with a dropdown list of options.
 const CustomTimePicker = ({ label, value, onChange, name, options }) => {
     const [isOpen, setIsOpen] = useState(false);
     const pickerRef = useRef(null);
@@ -274,10 +243,10 @@ const CustomTimePicker = ({ label, value, onChange, name, options }) => {
                 className="cursor-pointer"
             />
             {isOpen && (
-                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-700 shadow-lg rounded-md max-h-60 overflow-auto border dark:border-gray-600">
+                <div className="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md max-h-60 overflow-auto border border-gray-200">
                     <ul className="py-1">
                         {options.map(option => (
-                            <li key={option} onClick={() => handleSelect(option)} className="px-3 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-blue-500 hover:text-white cursor-pointer">
+                            <li key={option} onClick={() => handleSelect(option)} className="px-3 py-2 text-sm text-gray-700 hover:bg-blue-500 hover:text-white cursor-pointer">
                                 {option}
                             </li>
                         ))}
@@ -289,11 +258,9 @@ const CustomTimePicker = ({ label, value, onChange, name, options }) => {
 };
 
 // --- StudentFormModal.js ---
-// Modal for enrolling a new student or editing an existing one.
 const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
     const { db, storage, userId, appId, groups } = useContext(AppContext);
     
-    // Generate time options for dropdowns (e.g., 09:00, 09:30).
     const timeOptions = [];
     for (let h = 9; h <= 23; h++) {
         timeOptions.push(`${h.toString().padStart(2, '0')}:00`);
@@ -301,7 +268,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
     }
     timeOptions.push('00:00');
 
-    // Defines the initial state of the form, handling both new and existing students.
     const getInitialFormData = useCallback(() => {
         const getSafeDateString = (dateSource) => {
             if (dateSource && typeof dateSource.toDate === 'function') {
@@ -338,7 +304,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [statusMessage, setStatusMessage] = useState(null);
     
-    // Reset form state when the modal is opened.
     useEffect(() => {
         if (isOpen) {
             setFormData(getInitialFormData());
@@ -347,13 +312,11 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
         }
     }, [isOpen, getInitialFormData]);
 
-    // Generic handler for most form inputs.
     const handleChange = (e) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     };
     
-    // Specific handlers for nested state objects.
     const handleFeeChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({...prev, feeDetails: {...prev.feeDetails, [name]: value }}));
@@ -378,7 +341,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
         }));
     };
 
-    // Toggles a day in the recurring schedule array.
     const toggleScheduleDay = (day) => {
         const currentDays = formData.tutoringDetails.schedule.days;
         const newDays = currentDays.includes(day)
@@ -392,7 +354,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
         if (selectedFiles[0]) { setFiles(prev => ({ ...prev, [name]: selectedFiles[0] })); }
     };
 
-    // Uploads a file to Firebase Storage and returns the download URL.
     const uploadFile = async (file, path) => {
         if (!file) return null;
         const storageRef = ref(storage, path);
@@ -400,20 +361,17 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
         return await getDownloadURL(storageRef);
     };
 
-    // Handles form submission, including file uploads and data conversion.
     const handleSubmit = async (e) => {
         e.preventDefault();
         setIsSubmitting(true);
         setStatusMessage(null);
         let dataToSave = { ...formData };
         try {
-            // Upload files if new ones are selected.
             const nationalIdUrl = await uploadFile(files.nationalId, `artifacts/${appId}/users/${userId}/students/${Date.now()}_nationalId`);
             const agreementUrl = await uploadFile(files.agreement, `artifacts/${appId}/users/${userId}/students/${Date.now()}_agreement`);
             if(nationalIdUrl) dataToSave.documents.nationalIdUrl = nationalIdUrl;
             if(agreementUrl) dataToSave.documents.agreementUrl = agreementUrl;
             
-            // Convert date strings to Firestore Timestamps before saving.
             const toTimestamp = (dateString) => {
                 if (!dateString || typeof dateString !== 'string') return null;
                 const [year, month, day] = dateString.split('-').map(Number);
@@ -427,7 +385,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
                 dataToSave.tutoringDetails.endDate = null;
             }
 
-            // Update an existing document or add a new one.
             if (studentToEdit) {
                 const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', studentToEdit.id);
                 await setDoc(studentDocRef, dataToSave, { merge: true });
@@ -438,7 +395,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
             onClose();
         } catch (error) {
             console.error("Error saving student:", error);
-            console.error("Data that failed to save:", dataToSave);
             setStatusMessage({ type: 'error', text: 'Failed to save student. Please check console for details.' });
         } finally {
             setIsSubmitting(false);
@@ -458,8 +414,8 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
                     <div className="sm:col-span-3 flex items-end pb-1">
                         <label className="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" name="isTutoring" checked={formData.isTutoring} onChange={handleChange} className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                            <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Is Tutoring Student?</span>
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            <span className="ml-3 text-sm font-medium text-gray-900">Is Tutoring Student?</span>
                         </label>
                     </div>
                 </FormSection>
@@ -469,10 +425,10 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
                         <div className="sm:col-span-3"><FormInput label="Hourly Rate (₺)" name="hourlyRate" type="number" value={formData.tutoringDetails.hourlyRate} onChange={handleTutoringChange} /></div>
                         <div className="sm:col-span-3"><CustomDatePicker label="End Date" name="endDate" value={formData.tutoringDetails.endDate} onChange={handleTutoringChange} /></div>
                         <div className="sm:col-span-6">
-                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Recurring Schedule</label>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Recurring Schedule</label>
                             <div className="flex flex-wrap gap-2 mb-4">
                                 {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                                    <button type="button" key={day} onClick={() => toggleScheduleDay(day)} className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${formData.tutoringDetails.schedule.days.includes(day) ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
+                                    <button type="button" key={day} onClick={() => toggleScheduleDay(day)} className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${formData.tutoringDetails.schedule.days.includes(day) ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
                                         {day}
                                     </button>
                                 ))}
@@ -498,36 +454,36 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
                         </FormSection>
                         <FormSection title="Document Uploads">
                            <div className="sm:col-span-3">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">National ID</label>
-                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">National ID</label>
+                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                     <div className="space-y-1 text-center">
                                         <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
-                                        <div className="flex text-sm text-gray-600 dark:text-gray-400">
-                                            <label htmlFor="nationalId" className="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="nationalId" name="nationalId" type="file" className="sr-only" onChange={handleFileChange} /></label>
+                                        <div className="flex text-sm text-gray-600">
+                                            <label htmlFor="nationalId" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="nationalId" name="nationalId" type="file" className="sr-only" onChange={handleFileChange} /></label>
                                             <p className="pl-1">or drag and drop</p>
                                         </div>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">{files.nationalId ? files.nationalId.name : 'PNG, JPG, PDF up to 10MB'}</p>
+                                        <p className="text-xs text-gray-500">{files.nationalId ? files.nationalId.name : 'PNG, JPG, PDF up to 10MB'}</p>
                                     </div>
                                 </div>
                            </div>
                            <div className="sm:col-span-3">
-                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Agreement</label>
-                                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
+                                <label className="block text-sm font-medium text-gray-700 mb-1">Agreement</label>
+                                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
                                     <div className="space-y-1 text-center">
                                         <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true"><path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path></svg>
-                                        <div className="flex text-sm text-gray-600 dark:text-gray-400">
-                                            <label htmlFor="agreement" className="relative cursor-pointer bg-white dark:bg-gray-700 rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="agreement" name="agreement" type="file" className="sr-only" onChange={handleFileChange} /></label>
+                                        <div className="flex text-sm text-gray-600">
+                                            <label htmlFor="agreement" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none"><span>Upload a file</span><input id="agreement" name="agreement" type="file" className="sr-only" onChange={handleFileChange} /></label>
                                             <p className="pl-1">or drag and drop</p>
                                         </div>
-                                        <p className="text-xs text-gray-500 dark:text-gray-400">{files.agreement ? files.agreement.name : 'PNG, JPG, PDF up to 10MB'}</p>
+                                        <p className="text-xs text-gray-500">{files.agreement ? files.agreement.name : 'PNG, JPG, PDF up to 10MB'}</p>
                                     </div>
                                 </div>
                            </div>
                         </FormSection>
                     </>
                 )}
-                <div className="flex justify-end pt-8 mt-8 border-t dark:border-gray-700 space-x-4">
-                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500">Cancel</button>
+                <div className="flex justify-end pt-8 mt-8 border-t border-gray-200 space-x-4">
+                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
                     <button type="submit" disabled={isSubmitting} className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed">{isSubmitting ? 'Saving...' : 'Save Student'}</button>
                 </div>
                 {statusMessage && <p className={`mt-4 text-center text-sm ${statusMessage.type === 'error' ? 'text-red-500' : 'text-green-500'}`}>{statusMessage.text}</p>}
@@ -538,7 +494,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
 
 
 // --- StudentsModule.js ---
-// The main component for the "Students" page.
 const StudentsModule = () => {
     const { db, userId, appId } = useContext(AppContext);
     const [students, setStudents] = useState([]);
@@ -549,7 +504,6 @@ const StudentsModule = () => {
     const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
     const [studentToDelete, setStudentToDelete] = useState(null);
 
-    // Fetches and listens for real-time updates to the students collection.
     useEffect(() => {
         if (!userId || !appId) return;
         setIsLoading(true);
@@ -565,20 +519,16 @@ const StudentsModule = () => {
         return () => unsubscribe();
     }, [db, userId, appId]);
     
-    // Opens the confirmation modal before deleting a student.
     const openDeleteConfirmation = (student) => {
         setStudentToDelete(student);
         setIsConfirmModalOpen(true);
     };
 
-    // Deletes a student document from Firestore.
     const handleDeleteStudent = async () => {
         if (!studentToDelete) return;
         try {
             const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', studentToDelete.id);
             await deleteDoc(studentDocRef);
-            // Note: Associated documents in Storage are not deleted here to prevent accidental data loss.
-            // This would require a more complex implementation, possibly with cloud functions.
         } catch (error) {
             console.error("Error deleting student:", error);
         } finally {
@@ -594,39 +544,39 @@ const StudentsModule = () => {
     return (
         <div className="p-4 md:p-8">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Students</h2>
+                <h2 className="text-3xl font-bold text-gray-800">Students</h2>
                 <button onClick={openAddModal} className="flex items-center px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 shadow"><Icon path={ICONS.ADD} className="w-5 h-5 mr-2"/>Add Student</button>
             </div>
-            <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
+            <div className="mb-4 border-b border-gray-200">
                 <nav className="flex space-x-4" aria-label="Tabs">
-                    <button onClick={() => setActiveTab('group')} className={`px-3 py-2 font-medium text-sm rounded-t-lg ${activeTab === 'group' ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}>Group Students</button>
-                    <button onClick={() => setActiveTab('tutoring')} className={`px-3 py-2 font-medium text-sm rounded-t-lg ${activeTab === 'tutoring' ? 'border-b-2 border-blue-600 text-blue-600 dark:text-blue-400' : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'}`}>Tutoring Students</button>
+                    <button onClick={() => setActiveTab('group')} className={`px-3 py-2 font-medium text-sm rounded-t-lg ${activeTab === 'group' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}>Group Students</button>
+                    <button onClick={() => setActiveTab('tutoring')} className={`px-3 py-2 font-medium text-sm rounded-t-lg ${activeTab === 'tutoring' ? 'border-b-2 border-blue-600 text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}>Tutoring Students</button>
                 </nav>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <div className="bg-white rounded-lg shadow-md overflow-hidden">
                 <div className="overflow-x-auto">
                     <table className="w-full text-left">
-                        <thead className="bg-gray-50 dark:bg-gray-700">
+                        <thead className="bg-gray-50">
                             <tr>
-                                <th className="p-4 font-semibold text-sm text-gray-600 dark:text-gray-300 uppercase">Full Name</th>
-                                <th className="p-4 font-semibold text-sm text-gray-600 dark:text-gray-300 uppercase">Contact</th>
-                                <th className="p-4 font-semibold text-sm text-gray-600 dark:text-gray-300 uppercase">Enrollment Date</th>
-                                <th className="p-4 font-semibold text-sm text-gray-600 dark:text-gray-300 uppercase">Actions</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Full Name</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Contact</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Enrollment Date</th>
+                                <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Actions</th>
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200 dark:divide-gray-700">
+                        <tbody className="divide-y divide-gray-200">
                             {isLoading ? (
                                 <tr><td colSpan="4" className="p-4 text-center text-gray-500">Loading students...</td></tr>
                             ) : filteredStudents.length > 0 ? (
                                 filteredStudents.map(student => (
-                                    <tr key={student.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
-                                        <td className="p-4 text-gray-800 dark:text-gray-200">{student.fullName}</td>
-                                        <td className="p-4 text-gray-600 dark:text-gray-400">{student.studentContact}</td>
-                                        <td className="p-4 text-gray-600 dark:text-gray-400">{student.enrollmentDate?.toDate().toLocaleDateString()}</td>
+                                    <tr key={student.id} className="hover:bg-gray-50">
+                                        <td className="p-4 text-gray-800">{student.fullName}</td>
+                                        <td className="p-4 text-gray-600">{student.studentContact}</td>
+                                        <td className="p-4 text-gray-600">{student.enrollmentDate?.toDate().toLocaleDateString()}</td>
                                         <td className="p-4">
                                             <div className="flex space-x-2">
-                                                <button onClick={() => openEditModal(student)} className="p-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
-                                                <button onClick={() => openDeleteConfirmation(student)} className="p-2 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
+                                                <button onClick={() => openEditModal(student)} className="p-2 text-blue-600 hover:text-blue-800 rounded-full hover:bg-gray-200"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
+                                                <button onClick={() => openDeleteConfirmation(student)} className="p-2 text-red-600 hover:text-red-800 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -645,7 +595,6 @@ const StudentsModule = () => {
 };
 
 // --- GroupsModule.js ---
-// The main component for the "Groups" page.
 const GroupsModule = () => {
     const { db, userId, appId } = useContext(AppContext);
     const [groups, setGroups] = useState([]);
@@ -656,7 +605,6 @@ const GroupsModule = () => {
     const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
     const [selectedGroup, setSelectedGroup] = useState(null);
 
-    // Fetches both groups and students to calculate student counts and populate details.
     useEffect(() => {
         if (!userId || !appId) return;
         const groupsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'groups');
@@ -701,7 +649,7 @@ const GroupsModule = () => {
     return (
         <div className="p-4 md:p-8">
             <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Groups</h2>
+                <h2 className="text-3xl font-bold text-gray-800">Groups</h2>
                 <button onClick={openAddModal} className="flex items-center px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 shadow"><Icon path={ICONS.ADD} className="w-5 h-5 mr-2"/>Add Group</button>
             </div>
             {isLoading ? (
@@ -709,9 +657,9 @@ const GroupsModule = () => {
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {groups.map(group => (
-                        <div key={group.id} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col">
-                            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">{group.groupName}</h3>
-                            <div className="text-gray-600 dark:text-gray-400 mb-4">
+                        <div key={group.id} className="bg-white rounded-lg shadow-md p-6 flex flex-col">
+                            <h3 className="text-xl font-bold text-gray-800 mb-2">{group.groupName}</h3>
+                            <div className="text-gray-600 mb-4">
                                 {group.schedule && group.schedule.days && group.schedule.days.length > 0 && (
                                     <div>{group.schedule.days.join(', ')}: {group.schedule.startTime} - {group.schedule.endTime}</div>
                                 )}
@@ -721,8 +669,7 @@ const GroupsModule = () => {
                                 <span className="text-sm text-gray-500">{studentCount(group.id)} Students</span>
                                 <div className="flex items-center">
                                     <button onClick={() => openDetailsModal(group)} className="text-sm font-medium text-blue-600 hover:underline mr-4">Details</button>
-                                    <button onClick={() => openEditModal(group)} className="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
-                                    {/* A delete button would go here, likely with a confirmation modal. */}
+                                    <button onClick={() => openEditModal(group)} className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
                                 </div>
                             </div>
                         </div>
@@ -735,7 +682,6 @@ const GroupsModule = () => {
     );
 };
 
-// Modal for adding or editing a group.
 const GroupFormModal = ({ isOpen, onClose, groupToEdit }) => {
     const { db, userId, appId } = useContext(AppContext);
     const timeOptions = [];
@@ -799,10 +745,10 @@ const GroupFormModal = ({ isOpen, onClose, groupToEdit }) => {
                 <div className="space-y-6">
                     <FormInput label="Group Name" name="groupName" value={formData.groupName} onChange={handleChange} required />
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Schedule</label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Schedule</label>
                         <div className="flex flex-wrap gap-2 mb-4">
                             {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                                <button type="button" key={day} onClick={() => toggleScheduleDay(day)} className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${formData.schedule.days.includes(day) ? 'bg-blue-600 text-white' : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'}`}>
+                                <button type="button" key={day} onClick={() => toggleScheduleDay(day)} className={`px-4 py-2 text-sm font-medium rounded-md transition-colors ${formData.schedule.days.includes(day) ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'}`}>
                                     {day}
                                 </button>
                             ))}
@@ -814,8 +760,8 @@ const GroupFormModal = ({ isOpen, onClose, groupToEdit }) => {
                         </div>
                     </div>
                 </div>
-                <div className="flex justify-end pt-8 mt-8 border-t dark:border-gray-700 space-x-4">
-                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500">Cancel</button>
+                <div className="flex justify-end pt-8 mt-8 border-t border-gray-200 space-x-4">
+                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
                     <button type="submit" disabled={isSubmitting} className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed">{isSubmitting ? 'Saving...' : 'Save Group'}</button>
                 </div>
             </form>
@@ -823,7 +769,6 @@ const GroupFormModal = ({ isOpen, onClose, groupToEdit }) => {
     );
 };
 
-// Modal showing detailed information about a group, including lessons and students.
 const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
     const { db, userId, appId } = useContext(AppContext);
     const [studentToRemove, setStudentToRemove] = useState(null);
@@ -834,20 +779,17 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
     const [isAttendanceModalOpen, setIsAttendanceModalOpen] = useState(false);
     const [selectedLessonForAttendance, setSelectedLessonForAttendance] = useState(null);
 
-    // Fetches lessons for the selected group.
     useEffect(() => {
         if (!group?.id) return;
         const lessonsQuery = query(collection(db, 'artifacts', appId, 'users', userId, 'lessons'), where("groupId", "==", group.id));
         const unsubscribe = onSnapshot(lessonsQuery, (snapshot) => {
             const lessonsData = snapshot.docs.map(doc => ({id: doc.id, ...doc.data()}));
-            // Sort lessons by date.
             lessonsData.sort((a,b) => a.lessonDate.toMillis() - b.lessonDate.toMillis());
             setLessons(lessonsData);
         });
         return unsubscribe;
     }, [db, userId, appId, group?.id]);
 
-    // Pre-fills the lesson form when editing.
     useEffect(() => {
         if (lessonToEdit) {
             setNewLesson({
@@ -863,7 +805,6 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
         setStudentToRemove(student);
     };
 
-    // Removes a student from a group by setting their groupId to null.
     const handleRemoveStudent = async () => {
         if (!studentToRemove) return;
         const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', studentToRemove.id);
@@ -875,7 +816,6 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
         }
     };
 
-    // Adds a new lesson or updates an existing one.
     const handleAddOrUpdateLesson = async (e) => {
         e.preventDefault();
         if(!newLesson.date || !newLesson.topic) return;
@@ -891,7 +831,6 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
                 const lessonDocRef = doc(db, 'artifacts', appId, 'users', userId, 'lessons', lessonToEdit.id);
                 await updateDoc(lessonDocRef, lessonData);
             } else {
-                // Initialize with an empty attendance map.
                 const lessonsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'lessons');
                 await addDoc(lessonsCollectionPath, {...lessonData, attendance: {}});
             }
@@ -918,11 +857,10 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
         setIsAttendanceModalOpen(true);
     };
 
-    // Custom title component for the modal.
     const modalTitle = (
         <div>
-            <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100">{group.groupName}</h3>
-            <p className="text-sm text-gray-500 dark:text-gray-400">Details</p>
+            <h3 className="text-xl font-bold text-gray-800">{group.groupName}</h3>
+            <p className="text-sm text-gray-500">Details</p>
         </div>
     );
 
@@ -939,17 +877,17 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
                         </form>
                         <div className="sm:col-span-6 mt-4">
                              {lessons.length > 0 ? (
-                                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                                <ul className="divide-y divide-gray-200">
                                     {lessons.map(lesson => (
                                         <li key={lesson.id} className="py-3 flex items-center justify-between">
                                             <div>
-                                                <p className="font-medium text-gray-800 dark:text-gray-200">{lesson.topic}</p>
+                                                <p className="font-medium text-gray-800">{lesson.topic}</p>
                                                 <p className="text-sm text-gray-500">{lesson.lessonDate.toDate().toLocaleDateString()}</p>
                                             </div>
                                             <div className="flex items-center space-x-2">
                                                 <button onClick={() => openAttendanceModal(lesson)} className="text-sm text-gray-500 hover:text-gray-700">Attendance</button>
-                                                <button onClick={() => setLessonToEdit(lesson)} className="p-2 text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"><Icon path={ICONS.EDIT} className="w-4 h-4" /></button>
-                                                <button onClick={() => setLessonToDelete(lesson)} className="p-2 text-gray-500 hover:text-red-600 dark:text-gray-400 dark:hover:text-red-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-600"><Icon path={ICONS.DELETE} className="w-4 h-4" /></button>
+                                                <button onClick={() => setLessonToEdit(lesson)} className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EDIT} className="w-4 h-4" /></button>
+                                                <button onClick={() => setLessonToDelete(lesson)} className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-4 h-4" /></button>
                                             </div>
                                         </li>
                                     ))}
@@ -962,10 +900,10 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
                     <FormSection title="Students in this Group">
                         <div className="sm:col-span-6">
                             {students.length > 0 ? (
-                                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+                                <ul className="divide-y divide-gray-200">
                                     {students.map(student => (
                                         <li key={student.id} className="py-3 flex items-center justify-between">
-                                            <span className="text-gray-800 dark:text-gray-200">{student.fullName}</span>
+                                            <span className="text-gray-800">{student.fullName}</span>
                                             <button onClick={() => openRemoveConfirmation(student)} className="text-sm text-red-600 hover:text-red-800">Remove</button>
                                         </li>
                                     ))}
@@ -1007,12 +945,10 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
     );
 };
 
-// Modal for taking attendance for a specific lesson.
 const AttendanceModal = ({ isOpen, onClose, lesson, students }) => {
     const { db, userId, appId } = useContext(AppContext);
     const [attendance, setAttendance] = useState(lesson.attendance || {});
 
-    // Updates the attendance status for a student in real-time.
     const handleStatusChange = async (studentId, status) => {
         const newAttendance = { ...attendance, [studentId]: status };
         setAttendance(newAttendance);
@@ -1026,19 +962,19 @@ const AttendanceModal = ({ isOpen, onClose, lesson, students }) => {
             case 'present': return 'bg-green-500 text-white';
             case 'absent': return 'bg-red-500 text-white';
             case 'late': return 'bg-yellow-500 text-white';
-            default: return 'bg-gray-200 dark:bg-gray-600';
+            default: return 'bg-gray-200';
         }
     };
 
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={`Attendance for ${lesson.topic} on ${lesson.lessonDate.toDate().toLocaleDateString()}`}>
-            <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+            <ul className="divide-y divide-gray-200">
                 {students.map(student => (
                     <li key={student.id} className="py-4 flex items-center justify-between">
-                        <span className="font-medium text-gray-800 dark:text-gray-200">{student.fullName}</span>
+                        <span className="font-medium text-gray-800">{student.fullName}</span>
                         <div className="flex space-x-2">
                             {['present', 'absent', 'late'].map(status => (
-                                <button key={status} onClick={() => handleStatusChange(student.id, status)} className={`px-3 py-1 text-sm rounded-full capitalize transition-colors ${attendance[student.id] === status ? getStatusColor(status) : 'bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500'}`}>
+                                <button key={status} onClick={() => handleStatusChange(student.id, status)} className={`px-3 py-1 text-sm rounded-full capitalize transition-colors ${attendance[student.id] === status ? getStatusColor(status) : 'bg-gray-200 hover:bg-gray-300'}`}>
                                     {status}
                                 </button>
                             ))}
@@ -1052,7 +988,6 @@ const AttendanceModal = ({ isOpen, onClose, lesson, students }) => {
 
 
 // --- DashboardModule.js ---
-// The main component for the "Dashboard" page.
 const DashboardModule = () => {
     const { students, groups, db, userId, appId } = useContext(AppContext);
     const [isStudentModalOpen, setIsStudentModalOpen] = useState(false);
@@ -1061,7 +996,6 @@ const DashboardModule = () => {
     const [upcomingEvents, setUpcomingEvents] = useState([]);
     const [weekEvents, setWeekEvents] = useState([]);
 
-    // Fetches lessons and events to populate the dashboard widgets.
     useEffect(() => {
         if (!userId || !appId) return;
 
@@ -1070,30 +1004,24 @@ const DashboardModule = () => {
         const todayEnd = new Date(todayStart.getTime() + 24 * 60 * 60 * 1000 - 1);
         
         const weekStart = new Date(todayStart);
-        // Set to the most recent Monday.
-        const dayOfWeek = weekStart.getDay(); // Sunday is 0, Monday is 1
+        const dayOfWeek = weekStart.getDay();
         const diff = weekStart.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1); 
         weekStart.setDate(diff);
 
         const weekEnd = new Date(weekStart);
         weekEnd.setDate(weekStart.getDate() + 7);
 
-        // Helper to get a consistent timestamp for sorting.
         const getSortableTime = (item) => (item.type === 'lesson' ? item.lessonDate : item.startTime)?.toMillis() || 0;
 
-        // Listener for lessons
         const unsubLessons = onSnapshot(query(collection(db, 'artifacts', appId, 'users', userId, 'lessons'), where("lessonDate", ">=", todayStart)), (snapshot) => {
             const allLessons = snapshot.docs.map(doc => ({id: doc.id, type: 'lesson', ...doc.data()}));
-            // Update state by replacing previous lesson data, then re-sorting.
             setTodaysSchedule(current => [...current.filter(i => i.type !== 'lesson'), ...allLessons.filter(l => getSortableTime(l) <= todayEnd.getTime())].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
             setWeekEvents(current => [...current.filter(i => i.type !== 'lesson'), ...allLessons.filter(l => getSortableTime(l) < weekEnd.getTime())]);
             setUpcomingEvents(current => [...current.filter(i => i.type !== 'lesson'), ...allLessons].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
         });
 
-        // Listener for events
         const unsubEvents = onSnapshot(query(collection(db, 'artifacts', appId, 'users', userId, 'events'), where("startTime", ">=", todayStart)), (snapshot) => {
             const allEvents = snapshot.docs.map(doc => ({id: doc.id, type: 'event', ...doc.data()}));
-            // Update state by replacing previous event data, then re-sorting.
             setTodaysSchedule(current => [...current.filter(i => i.type !== 'event'), ...allEvents.filter(e => getSortableTime(e) <= todayEnd.getTime())].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
             setWeekEvents(current => [...current.filter(i => i.type !== 'event'), ...allEvents.filter(e => getSortableTime(e) < weekEnd.getTime())]);
             setUpcomingEvents(current => [...current.filter(i => i.type !== 'event'), ...allEvents].sort((a,b) => getSortableTime(a) - getSortableTime(b)));
@@ -1108,15 +1036,15 @@ const DashboardModule = () => {
 
     return (
         <div className="p-4 md:p-8">
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">Dashboard</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Students</h3>
-                    <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{students.length}</p>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-gray-500 text-sm font-medium">Total Students</h3>
+                    <p className="text-3xl font-bold text-gray-800">{students.length}</p>
                 </div>
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <h3 className="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Groups</h3>
-                    <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{groups.length}</p>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-gray-500 text-sm font-medium">Total Groups</h3>
+                    <p className="text-3xl font-bold text-gray-800">{groups.length}</p>
                 </div>
                 <button onClick={() => setIsStudentModalOpen(true)} className="bg-blue-600 text-white p-6 rounded-lg shadow-md hover:bg-blue-700 transition-colors text-left">
                     <h3 className="text-lg font-semibold">Enroll Student</h3>
@@ -1129,15 +1057,15 @@ const DashboardModule = () => {
             </div>
             
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <h3 className="font-semibold mb-4 text-gray-800 dark:text-gray-100">Today's Schedule</h3>
+                <div className="lg:col-span-1 bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="font-semibold mb-4 text-gray-800">Today's Schedule</h3>
                     {todaysSchedule.length > 0 ? (
                         <ul className="space-y-3">
                             {todaysSchedule.map(item => (
                                 <li key={item.id} className="flex items-center">
                                     <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
                                     <div>
-                                        <p className="font-medium text-gray-800 dark:text-gray-200">{item.type === 'lesson' ? item.topic : item.eventName}</p>
+                                        <p className="font-medium text-gray-800">{item.type === 'lesson' ? item.topic : item.eventName}</p>
                                         <p className="text-sm text-gray-500">{item.type === 'lesson' ? item.lessonDate.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : item.startTime.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
                                     </div>
                                 </li>
@@ -1147,15 +1075,15 @@ const DashboardModule = () => {
                         <p className="text-gray-500">No events or lessons scheduled for today.</p>
                     )}
                 </div>
-                <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                     <h3 className="font-semibold mb-4 text-gray-800 dark:text-gray-100">Upcoming Events</h3>
+                <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
+                     <h3 className="font-semibold mb-4 text-gray-800">Upcoming Events</h3>
                      {upcomingEvents.length > 0 ? (
                         <ul className="space-y-3">
                             {upcomingEvents.slice(0, 5).map((item, index) => (
-                                <li key={item.id} className={`p-2 rounded-md flex items-center ${index === 0 ? 'bg-blue-100 dark:bg-blue-900/50' : ''}`}>
+                                <li key={item.id} className={`p-2 rounded-md flex items-center ${index === 0 ? 'bg-blue-100' : ''}`}>
                                      <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : 'bg-green-500'}`}></div>
                                     <div>
-                                        <p className="font-medium text-gray-800 dark:text-gray-200">{item.type === 'lesson' ? item.topic : item.eventName}</p>
+                                        <p className="font-medium text-gray-800">{item.type === 'lesson' ? item.topic : item.eventName}</p>
                                         <p className="text-sm text-gray-500">{item.type === 'lesson' ? item.lessonDate.toDate().toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit'}) : item.startTime.toDate().toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric', hour: '2-digit', minute:'2-digit'})}</p>
                                     </div>
                                 </li>
@@ -1166,8 +1094,8 @@ const DashboardModule = () => {
                      )}
                 </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold mb-4 text-gray-800 dark:text-gray-100">Weekly Overview</h3>
+            <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold mb-4 text-gray-800">Weekly Overview</h3>
                 <WeeklyOverview events={weekEvents} />
             </div>
             <StudentFormModal isOpen={isStudentModalOpen} onClose={() => setIsStudentModalOpen(false)} />
@@ -1176,13 +1104,12 @@ const DashboardModule = () => {
     );
 };
 
-// Component to render the weekly calendar view.
 const WeeklyOverview = ({ events }) => {
     const hours = Array.from({ length: 16 }, (_, i) => i + 8); 
     
     const today = new Date();
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1)); // Monday as start of week
+    startOfWeek.setDate(today.getDate() - today.getDay() + (today.getDay() === 0 ? -6 : 1)); 
     startOfWeek.setHours(0,0,0,0);
     
     const weekDates = Array.from({length: 7}).map((_, i) => {
@@ -1191,40 +1118,36 @@ const WeeklyOverview = ({ events }) => {
         return date;
     });
 
-    const getDayIndex = (date) => (date.getDay() + 6) % 7; // Monday is 0
+    const getDayIndex = (date) => (date.getDay() + 6) % 7; 
     const todayIndex = getDayIndex(new Date());
     
     return (
-        <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+        <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
             <div className="grid grid-cols-[auto_repeat(7,_minmax(0,_1fr))]">
-                {/* Header Row */}
-                <div className="row-start-1 col-start-1"></div> {/* Empty corner */}
+                <div className="row-start-1 col-start-1"></div>
                 {weekDates.map((date, i) => (
-                    <div key={i} className={`text-center font-semibold p-2 border-l border-b border-gray-200 dark:border-gray-600 ${i === todayIndex ? 'text-blue-600 dark:text-blue-400' : 'text-gray-600 dark:text-gray-300'}`}>
+                    <div key={i} className={`text-center font-semibold p-2 border-l border-b border-gray-200 ${i === todayIndex ? 'text-blue-600' : 'text-gray-600'}`}>
                         <div>{date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
                         <div className="text-xs font-normal">{date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })}</div>
                     </div>
                 ))}
             
-                {/* Time Gutter and Grid Content */}
                 <div className="col-start-1 col-span-1 row-start-2 grid" style={{gridTemplateRows: `repeat(${hours.length}, minmax(0, 1fr))`}}>
                      {hours.map(hour => (
-                        <div key={hour} className="h-16 text-right pr-2 border-t border-gray-200 dark:border-gray-600 flex items-center justify-end">
-                            <span className="text-sm text-gray-700 dark:text-gray-300">{`${hour.toString().padStart(2, '0')}:00`}</span>
+                        <div key={hour} className="h-16 text-right pr-2 border-t border-gray-200 flex items-center justify-end">
+                            <span className="text-sm text-gray-700">{`${hour.toString().padStart(2, '0')}:00`}</span>
                         </div>
                     ))}
                 </div>
                 <div className="col-start-2 col-span-7 row-start-2 grid grid-cols-7 relative" style={{gridTemplateRows: `repeat(${hours.length}, minmax(0, 1fr))`}}>
-                    {/* Background Grid Cells */}
                     {Array.from({length: hours.length * 7}).map((_, i) => (
-                        <div key={i} className="border-l border-t border-gray-200 dark:border-gray-600"></div>
+                        <div key={i} className="border-l border-t border-gray-200"></div>
                     ))}
 
-                    {/* Events */}
                     {events.map(event => {
                         const startTime = event.type === 'lesson' ? event.lessonDate.toDate() : event.startTime.toDate();
                         const endTime = event.type === 'lesson' 
-                            ? new Date(startTime.getTime() + 2 * 60 * 60 * 1000) // Assume 2 hours for lessons
+                            ? new Date(startTime.getTime() + 2 * 60 * 60 * 1000)
                             : (event.endTime ? event.endTime.toDate() : new Date(startTime.getTime() + 1 * 60 * 60 * 1000));
                         
                         const dayIndex = getDayIndex(startTime);
@@ -1260,57 +1183,180 @@ const WeeklyOverview = ({ events }) => {
 };
 
 // --- FinancesModule.js ---
-const FinancesModule = () => {
+const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
+    if (!student) return null;
+
+    const { feeDetails, enrollmentDate } = student;
+    const installments = [];
+    if (feeDetails && enrollmentDate) {
+        const totalFee = parseFloat(feeDetails.totalFee) || 0;
+        const numInstallments = parseInt(feeDetails.numberOfInstallments, 10) || 1;
+        const installmentAmount = totalFee / numInstallments;
+        const startDate = enrollmentDate.toDate();
+
+        for (let i = 0; i < numInstallments; i++) {
+            const dueDate = new Date(startDate);
+            dueDate.setMonth(startDate.getMonth() + i);
+            installments.push({
+                number: i + 1,
+                amount: installmentAmount.toFixed(2),
+                dueDate: dueDate.toLocaleDateString(),
+                status: 'Unpaid' // This will be dynamic later
+            });
+        }
+    }
+
+    const modalTitle = (
+        <div>
+            <h3 className="text-xl font-bold text-gray-800">{student.fullName}</h3>
+            <p className="text-sm text-gray-500">Payment Details</p>
+        </div>
+    );
+    
     return (
-        <div className="p-4 md:p-8">
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100">Finances</h2>
-                {/* Add button will go here later */}
+        <Modal isOpen={isOpen} onClose={onClose} title={modalTitle}>
+            <div className="space-y-4">
+                <h4 className="font-semibold">Installment Plan</h4>
+                 <ul className="divide-y divide-gray-200">
+                    {installments.map(inst => (
+                        <li key={inst.number} className="py-3 flex justify-between items-center">
+                            <div>
+                                <p className="font-medium text-gray-800">Installment #{inst.number}</p>
+                                <p className="text-sm text-gray-500">Due: {inst.dueDate}</p>
+                            </div>
+                            <div className="text-right">
+                                <p className="font-semibold text-gray-800">₺{inst.amount}</p>
+                                <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">{inst.status}</span>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                {/* Student Payments Card */}
-                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Student Payments</h3>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Track installments and payments for group and tutoring students.
-                    </p>
-                    <button className="w-full px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700">
-                        Manage Student Payments
-                    </button>
-                </div>
-                {/* Business Expenses Card */}
-                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                     <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Business Expenses</h3>
-                     <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Log business-related expenses like rent, bills, and materials.
-                     </p>
-                     <button className="w-full px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700">
-                        Log Business Expense
-                    </button>
-                </div>
-                {/* Personal Expenses Card */}
-                <div className="lg:col-span-1 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                     <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Personal Expenses</h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Keep track of personal spending for budgeting purposes.
-                     </p>
-                     <button className="w-full px-4 py-2 rounded-lg text-white bg-yellow-500 hover:bg-yellow-600">
-                        Log Personal Expense
-                    </button>
-                </div>
+        </Modal>
+    );
+};
+
+const StudentPaymentsView = ({ onStudentSelect }) => {
+    const { students } = useContext(AppContext);
+    const [activeTab, setActiveTab] = useState('group');
+    
+    const groupStudents = students.filter(s => !s.isTutoring);
+    const tutoringStudents = students.filter(s => s.isTutoring);
+    const studentsToShow = activeTab === 'group' ? groupStudents : tutoringStudents;
+
+    return (
+        <div className="bg-white rounded-lg shadow-md">
+            <div className="p-4 border-b border-gray-200">
+                 <h3 className="font-semibold text-xl text-gray-800">Manage Student Payments</h3>
             </div>
-            <div className="mt-8 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 className="font-semibold text-xl mb-4 text-gray-800 dark:text-gray-100">Financial Overview</h3>
-                <p className="text-center text-gray-500 py-8">
-                    Charts and detailed financial analyses will be displayed here.
-                </p>
+            <div className="px-4 border-b border-gray-200">
+                <nav className="flex space-x-4" aria-label="Tabs">
+                    <button onClick={() => setActiveTab('group')} className={`-mb-px px-3 py-2 font-medium text-sm border-b-2 ${activeTab === 'group' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Group Students</button>
+                    <button onClick={() => setActiveTab('tutoring')} className={`-mb-px px-3 py-2 font-medium text-sm border-b-2 ${activeTab === 'tutoring' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}>Tutoring Students</button>
+                </nav>
+            </div>
+            <div className="overflow-x-auto">
+                 <table className="w-full text-left">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Full Name</th>
+                            <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Payment Status</th>
+                            <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Next Due Date</th>
+                            <th className="p-4 font-semibold text-sm text-gray-600 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                        {studentsToShow.length > 0 ? (
+                            studentsToShow.map(student => (
+                                <tr key={student.id} className="hover:bg-gray-50">
+                                    <td className="p-4 text-gray-800">{student.fullName}</td>
+                                    <td className="p-4 text-gray-600">
+                                        <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Paid</span>
+                                    </td>
+                                    <td className="p-4 text-gray-600">N/A</td>
+                                    <td className="p-4">
+                                        <button onClick={() => onStudentSelect(student)} className="text-sm font-medium text-blue-600 hover:underline">View Details</button>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr><td colSpan="4" className="p-4 text-center text-gray-500">No students found in this category.</td></tr>
+                        )}
+                    </tbody>
+                </table>
             </div>
         </div>
     );
 };
 
+const FinancesModule = () => {
+    const [activeView, setActiveView] = useState('main'); // 'main', 'studentPayments', 'businessExpenses', 'personalExpenses'
+    const [selectedStudent, setSelectedStudent] = useState(null);
 
-// Modal for logging a new generic event.
+    const handleStudentSelect = (student) => {
+        setSelectedStudent(student);
+    };
+
+    const handleCloseModal = () => {
+        setSelectedStudent(null);
+    };
+
+    const renderContent = () => {
+        switch (activeView) {
+            case 'studentPayments':
+                return <StudentPaymentsView onStudentSelect={handleStudentSelect} />;
+            // other cases for business/personal expenses
+            default:
+                return (
+                    <>
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <button onClick={() => setActiveView('studentPayments')} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
+                                <Icon path={ICONS.STUDENTS} className="w-8 h-8 mr-4 text-blue-500"/>
+                                <h3 className="font-semibold text-xl text-gray-800">Student Payments</h3>
+                            </button>
+                            <button onClick={() => { /* Logic for business expenses */ }} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
+                                <Icon path={ICONS.BUILDING} className="w-8 h-8 mr-4 text-green-500"/>
+                                <h3 className="font-semibold text-xl text-gray-800">Business Expenses</h3>
+                            </button>
+                             <button onClick={() => { /* Logic for personal expenses */ }} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
+                                <Icon path={ICONS.SHOPPING_CART} className="w-8 h-8 mr-4 text-yellow-500"/>
+                                <h3 className="font-semibold text-xl text-gray-800">Personal Expenses</h3>
+                            </button>
+                        </div>
+                         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
+                            <h3 className="font-semibold text-xl mb-4 text-gray-800">Financial Overview</h3>
+                            <p className="text-center text-gray-500 py-8">
+                                Charts and detailed financial analyses will be displayed here.
+                            </p>
+                        </div>
+                    </>
+                );
+        }
+    };
+
+    return (
+        <div className="p-4 md:p-8">
+            <div className="flex items-center mb-6">
+                 {activeView !== 'main' && (
+                    <button onClick={() => setActiveView('main')} className="p-2 rounded-full hover:bg-gray-200 mr-4">
+                        <Icon path={ICONS.CHEVRON_LEFT} className="w-6 h-6" />
+                    </button>
+                )}
+                <h2 className="text-3xl font-bold text-gray-800">Finances</h2>
+            </div>
+            {renderContent()}
+            {selectedStudent && (
+                <StudentPaymentDetailsModal 
+                    isOpen={!!selectedStudent} 
+                    onClose={handleCloseModal} 
+                    student={selectedStudent} 
+                />
+            )}
+        </div>
+    );
+};
+
+
 function EventFormModal({ isOpen, onClose }) {
     const { db, userId, appId } = useContext(AppContext);
     const [formData, setFormData] = useState({ eventName: '', startDate: '', startTime: '09:00', endTime: '10:00' });
@@ -1337,7 +1383,6 @@ function EventFormModal({ isOpen, onClose }) {
         setIsSubmitting(true);
         const { eventName, startDate, startTime, endTime } = formData;
         
-        // Combine date and time strings into Date objects.
         const [startHours, startMinutes] = startTime.split(':');
         const startDateTime = new Date(startDate.replace(/-/g, '/'));
         startDateTime.setHours(startHours, startMinutes);
@@ -1372,8 +1417,8 @@ function EventFormModal({ isOpen, onClose }) {
                         <div className="flex-1"><CustomTimePicker label="End Time" name="endTime" value={formData.endTime} onChange={handleChange} options={timeOptions} /></div>
                     </div>
                 </div>
-                <div className="flex justify-end pt-8 mt-8 border-t dark:border-gray-700 space-x-4">
-                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300 dark:text-gray-200 dark:bg-gray-600 dark:hover:bg-gray-500">Cancel</button>
+                <div className="flex justify-end pt-8 mt-8 border-t border-gray-200 space-x-4">
+                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
                     <button type="submit" disabled={isSubmitting} className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed">{isSubmitting ? 'Saving...' : 'Save Event'}</button>
                 </div>
             </form>
@@ -1381,94 +1426,23 @@ function EventFormModal({ isOpen, onClose }) {
     );
 }
 
+const Documents = () => <div className="p-8 text-2xl font-bold text-gray-800">Documents Module (Under Construction)</div>;
 
-// --- PLACEHOLDER MODULES ---
-const Documents = () => <div className="p-8 text-2xl font-bold text-gray-800 dark:text-gray-200">Documents Module (Under Construction)</div>;
-
-
-// --- SettingsModule.js ---
-// Component for the "Settings" page.
-const SettingsModule = () => {
-    const { db, userId, appId } = useContext(AppContext);
-    const [isSeeding, setIsSeeding] = useState(false);
-    const [seedMessage, setSeedMessage] = useState('');
-
-    // Loads sample data into Firestore for testing purposes.
-    const loadSampleData = async () => {
-        setIsSeeding(true);
-        setSeedMessage('Loading sample data...');
-        
-        const batch = writeBatch(db);
-
-        // Sample Groups
-        const group1 = { groupName: 'A1 Beginners', schedule: { days: ['Mon', 'Wed'], startTime: '18:00', endTime: '20:00' }};
-        const group2 = { groupName: 'B2 Intermediate', schedule: { days: ['Tue', 'Thu'], startTime: '19:00', endTime: '21:00' }};
-        const group1Ref = doc(collection(db, 'artifacts', appId, 'users', userId, 'groups'));
-        const group2Ref = doc(collection(db, 'artifacts', appId, 'users', userId, 'groups'));
-        batch.set(group1Ref, group1);
-        batch.set(group2Ref, group2);
-
-        // Sample Students
-        const students = [
-            { fullName: 'Ayşe Yılmaz', studentContact: '555-0101', groupId: group1Ref.id, isTutoring: false, enrollmentDate: Timestamp.now() },
-            { fullName: 'Mehmet Kaya', studentContact: '555-0102', groupId: group1Ref.id, isTutoring: false, enrollmentDate: Timestamp.now() },
-            { fullName: 'Fatma Demir', studentContact: '555-0103', groupId: group2Ref.id, isTutoring: false, enrollmentDate: Timestamp.now() },
-            { fullName: 'Ali Vural', studentContact: '555-0104', groupId: group2Ref.id, isTutoring: false, enrollmentDate: Timestamp.now() },
-            { fullName: 'Zeynep Çelik', studentContact: '555-0105', isTutoring: true, tutoringDetails: { hourlyRate: 250, schedule: { days: ['Fri'], startTime: '14:00', endTime: '15:00' } }, enrollmentDate: Timestamp.now() },
-        ];
-        students.forEach(student => {
-            const studentRef = doc(collection(db, 'artifacts', appId, 'users', userId, 'students'));
-            batch.set(studentRef, student);
-        });
-        
-        // Sample Lessons
-        const lessons = [
-            { topic: 'Introduction & Greetings', groupId: group1Ref.id, lessonDate: Timestamp.fromDate(new Date()) },
-            { topic: 'Present Tense', groupId: group1Ref.id, lessonDate: Timestamp.fromDate(new Date(Date.now() + 2 * 24 * 60 * 60 * 1000)) },
-            { topic: 'Advanced Conditionals', groupId: group2Ref.id, lessonDate: Timestamp.fromDate(new Date(Date.now() + 1 * 24 * 60 * 60 * 1000)) },
-        ];
-        lessons.forEach(lesson => {
-            const lessonRef = doc(collection(db, 'artifacts', appId, 'users', userId, 'lessons'));
-            batch.set(lessonRef, {...lesson, attendance: {}});
-        });
-
-        try {
-            await batch.commit();
-            setSeedMessage('Sample data loaded successfully!');
-        } catch (error) {
-            setSeedMessage('Error loading data. See console for details.');
-            console.error("Error seeding data: ", error);
-        } finally {
-            setIsSeeding(false);
-        }
-    };
-
-    return (
-        <div className="p-4 md:p-8">
-            <h2 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">Settings</h2>
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-4">Test Data</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    Click the button below to load sample students, groups, and lessons into the system. This is useful for testing new features without entering data manually.
-                </p>
-                <button 
-                    onClick={loadSampleData} 
-                    disabled={isSeeding}
-                    className="px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 disabled:cursor-not-allowed"
-                >
-                    {isSeeding ? 'Loading...' : 'Load Sample Data'}
-                </button>
-                {seedMessage && <p className={`mt-4 text-sm text-gray-600 dark:text-gray-300`}>{seedMessage}</p>}
-            </div>
+const SettingsModule = () => (
+    <div className="p-4 md:p-8">
+        <h2 className="text-3xl font-bold text-gray-800 mb-6">Settings</h2>
+        <div className="bg-white p-6 rounded-lg shadow-md">
+            <p className="text-gray-600">
+                Future settings, such as data export and message templates, will be available here.
+            </p>
         </div>
-    );
-};
+    </div>
+);
 
 
 // --- LAYOUT COMPONENTS ---
-// The main sidebar navigation component.
 const Sidebar = ({ currentPage, setCurrentPage, isSidebarOpen }) => {
-    const NavItem = ({ icon, label, pageName }) => ( <li onClick={() => setCurrentPage(pageName)} className={`flex items-center p-3 my-1 rounded-lg cursor-pointer transition-colors ${ currentPage === pageName ? 'bg-slate-700 text-white shadow-lg' : 'text-gray-300 hover:bg-slate-700/50'}`}><Icon path={icon} /><span className="ml-4 font-medium">{label}</span></li> );
+    const NavItem = ({ icon, label, pageName }) => ( <li onClick={() => setCurrentPage(pageName)} className={`flex items-center p-3 my-1 rounded-lg cursor-pointer transition-colors ${ currentPage === pageName ? 'bg-slate-700 text-white shadow-lg' : 'text-slate-500 hover:bg-slate-700/50 hover:text-white'}`}><Icon path={icon} /><span className="ml-4 font-medium">{label}</span></li> );
     return (
         <aside className={`absolute md:relative z-30 md:z-auto flex-shrink-0 w-64 bg-slate-800 transition-transform duration-300 ease-in-out ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
             <div className="flex flex-col h-full">
@@ -1493,24 +1467,16 @@ const Sidebar = ({ currentPage, setCurrentPage, isSidebarOpen }) => {
     );
 };
 
-// The header component, containing the theme toggle and mobile sidebar button.
 const Header = ({ toggleSidebar }) => {
-    const { isDarkMode, toggleTheme } = useContext(AppContext);
     return (
-        <header className="flex items-center justify-between md:justify-end h-16 px-6 bg-white dark:bg-gray-800 border-b dark:border-gray-700 flex-shrink-0">
-            <button onClick={toggleSidebar} className="md:hidden text-gray-500 dark:text-gray-400">
+        <header className="flex items-center justify-between md:justify-end h-16 px-6 bg-white border-b border-gray-200 flex-shrink-0">
+            <button onClick={toggleSidebar} className="md:hidden text-gray-500">
                 <Icon path={ICONS.MENU} />
             </button>
-            <div className="flex items-center space-x-4">
-                <button onClick={toggleTheme} className="p-2 rounded-full text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <Icon path={isDarkMode ? ICONS.SUN : ICONS.MOON} />
-                </button>
-            </div>
         </header>
     );
 };
 
-// The main content area that renders the currently selected page.
 const MainContent = ({ currentPage }) => {
     const renderPage = () => {
         switch (currentPage) {
@@ -1523,7 +1489,7 @@ const MainContent = ({ currentPage }) => {
             default: return <DashboardModule />;
         }
     };
-    return <main className="flex-1 overflow-y-auto bg-gray-100 dark:bg-gray-900">{renderPage()}</main>;
+    return <main className="flex-1 overflow-y-auto bg-gray-100">{renderPage()}</main>;
 };
 
 // --- MAIN APP COMPONENT ---
@@ -1536,7 +1502,6 @@ export default function App() {
     const [groups, setGroups] = useState([]);
     const [students, setStudents] = useState([]);
 
-    // Handles Firebase authentication on initial load.
     useEffect(() => {
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
         const authSignIn = async () => {
@@ -1558,8 +1523,6 @@ export default function App() {
         return () => unsubscribe();
     }, []);
 
-    // Fetches global data (groups and students) once the user is authenticated.
-    // This data is passed down through context to avoid redundant fetches in child components.
     useEffect(() => {
         if (!user) return;
         const groupsCollectionPath = collection(db, 'artifacts', appId, 'users', user.uid, 'groups');
@@ -1580,22 +1543,19 @@ export default function App() {
         };
     }, [user, db, appId]);
 
-    // Display a loading screen until Firebase auth is ready.
     if (!authReady || !user) {
-        return <div className="flex items-center justify-center h-screen bg-gray-100 dark:bg-gray-900"><div className="text-2xl font-semibold text-gray-700 dark:text-gray-300">Loading System...</div></div>;
+        return <div className="flex items-center justify-center h-screen bg-gray-100"><div className="text-2xl font-semibold text-gray-700">Loading System...</div></div>;
     }
 
     return (
         <AppContext.Provider value={{ db, storage, auth, userId: user.uid, appId, groups, students }}>
-            <ThemeProvider>
-                <div className="flex h-screen font-sans text-gray-900 bg-gray-100 dark:bg-gray-900 dark:text-white">
-                    <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isSidebarOpen={isSidebarOpen}/>
-                    <div className="flex flex-col flex-1 min-w-0">
-                        <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-                        <MainContent currentPage={currentPage} />
-                    </div>
+            <div className="flex h-screen font-sans text-gray-900 bg-gray-100">
+                <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isSidebarOpen={isSidebarOpen}/>
+                <div className="flex flex-col flex-1 min-w-0">
+                    <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
+                    <MainContent currentPage={currentPage} />
                 </div>
-            </ThemeProvider>
+            </div>
         </AppContext.Provider>
     );
 }
