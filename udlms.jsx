@@ -1,8 +1,10 @@
-import React, { useState, useEffect, createContext, useContext, useCallback, useRef } from 'react';
+import React, { useState, useEffect, createContext, useContext, useCallback, useRef, useMemo } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
 import { getFirestore, setLogLevel, collection, onSnapshot, addDoc, doc, setDoc, deleteDoc, Timestamp, query, where, getDocs, updateDoc, writeBatch } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
+
 
 // --- ICONS (using inline SVG for simplicity) ---
 const Icon = ({ path, className = "w-6 h-6" }) => (
@@ -30,6 +32,10 @@ const ICONS = {
     REMOVE_CIRCLE: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm5 11H7v-2h10v2z",
     BUILDING: "M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z",
     SHOPPING_CART: "M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z",
+    EYE: "M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z",
+    EYE_OFF: "M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 9.93 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z",
+    DOWNLOAD: "M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z",
+    UPLOAD: "M9 16h6v-6h4l-8-8-8 8h4v6zm-4 2h14v2H5v-2z",
 };
 
 // --- FIREBASE CONFIGURATION ---
@@ -1234,7 +1240,7 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
                 studentId: student.id,
                 studentName: student.fullName,
                 amount: installmentToLog.amount,
-                paymentDate: Timestamp.now(),
+                date: Timestamp.now(), // Changed from paymentDate to date for consistency
                 type: 'income-group',
                 description: `Installment #${installmentNumber} for ${student.fullName}`
             });
@@ -1612,10 +1618,167 @@ const PersonalExpensesView = () => {
     );
 };
 
+const FinancialOverview = ({ transactions, isDataHidden, formatCurrency }) => {
+    const PIE_COLORS = {
+        'income-group': '#3b82f6', // blue-500
+        'income-tutoring': '#10b981', // emerald-500
+        'expense-business': '#ef4444', // red-500
+        'expense-personal': '#f59e0b', // amber-500
+    };
+    
+    const incomeSourceColors = [PIE_COLORS['income-group'], PIE_COLORS['income-tutoring']];
+    const expenseBreakdownColors = [PIE_COLORS['expense-business'], PIE_COLORS['expense-personal']];
+
+    const processedData = useMemo(() => {
+        let totalIncome = 0;
+        let totalExpenses = 0;
+        const incomeSources = { 'income-group': 0, 'income-tutoring': 0 };
+        const expenseBreakdown = { 'expense-business': 0, 'expense-personal': 0 };
+        const monthlySummary = {};
+
+        transactions.forEach(t => {
+            const amount = t.amount || 0;
+            const month = t.date.toDate().toLocaleString('en-US', { month: 'short', year: 'numeric' });
+            
+            if (!monthlySummary[month]) {
+                monthlySummary[month] = { name: month, income: 0, expenses: 0 };
+            }
+
+            if (t.type.startsWith('income')) {
+                totalIncome += amount;
+                incomeSources[t.type] = (incomeSources[t.type] || 0) + amount;
+                monthlySummary[month].income += amount;
+            } else if (t.type.startsWith('expense')) {
+                totalExpenses += amount;
+                expenseBreakdown[t.type] = (expenseBreakdown[t.type] || 0) + amount;
+                monthlySummary[month].expenses += amount;
+            }
+        });
+
+        const incomeSourceData = Object.entries(incomeSources)
+            .map(([key, value]) => ({ name: key === 'income-group' ? 'Group' : 'Tutoring', value }))
+            .filter(d => d.value > 0);
+
+        const expenseBreakdownData = Object.entries(expenseBreakdown)
+            .map(([key, value]) => ({ name: key === 'expense-business' ? 'Business' : 'Personal', value }))
+            .filter(d => d.value > 0);
+
+        return {
+            totalIncome,
+            totalExpenses,
+            incomeSourceData,
+            expenseBreakdownData,
+            monthlySummaryData: Object.values(monthlySummary).reverse(),
+        };
+    }, [transactions]);
+
+    const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index, name, value }) => {
+        const RADIAN = Math.PI / 180;
+        const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+        const x = cx + radius * Math.cos(-midAngle * RADIAN);
+        const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+        return (
+            <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central" className="text-xs font-bold">
+                {`${name} (${(percent * 100).toFixed(0)}%)`}
+            </text>
+        );
+    };
+
+    return (
+        <div className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                 <div className="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 className="text-gray-500 text-sm font-medium uppercase">Total Income</h3>
+                    <p className="text-3xl font-bold text-green-600">{formatCurrency(processedData.totalIncome)}</p>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 className="text-gray-500 text-sm font-medium uppercase">Total Expenses</h3>
+                    <p className="text-3xl font-bold text-red-600">{formatCurrency(processedData.totalExpenses)}</p>
+                </div>
+                 <div className="bg-white p-6 rounded-lg shadow-md text-center">
+                    <h3 className="text-gray-500 text-sm font-medium uppercase">Net Profit</h3>
+                    <p className="text-3xl font-bold text-blue-600">{formatCurrency(processedData.totalIncome - processedData.totalExpenses)}</p>
+                </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-lg shadow-md">
+                <h3 className="font-semibold text-xl mb-4 text-gray-800">Income vs. Expenses</h3>
+                <div style={{ width: '100%', height: 300 }}>
+                    <ResponsiveContainer>
+                        <BarChart data={processedData.monthlySummaryData} margin={{ top: 5, right: 20, left: 30, bottom: 5 }}>
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis dataKey="name" />
+                            <YAxis tickFormatter={(value) => isDataHidden ? '₺----' : `₺${value.toLocaleString()}`} />
+                            <Tooltip formatter={(value) => formatCurrency(value)} />
+                            <Legend />
+                            <Bar dataKey="income" fill="#16a34a" />
+                            <Bar dataKey="expenses" fill="#dc2626" />
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="font-semibold text-xl mb-4 text-gray-800">Income Sources</h3>
+                    <div style={{ width: '100%', height: 300 }}>
+                         <ResponsiveContainer>
+                            <PieChart>
+                                <Pie data={processedData.incomeSourceData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} fill="#8884d8" labelLine={false} label={renderCustomizedLabel}>
+                                    {processedData.incomeSourceData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={incomeSourceColors[index % incomeSourceColors.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip formatter={(value) => formatCurrency(value)} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+                <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="font-semibold text-xl mb-4 text-gray-800">Expense Breakdown</h3>
+                    <div style={{ width: '100%', height: 300 }}>
+                        <ResponsiveContainer>
+                            <PieChart>
+                                <Pie data={processedData.expenseBreakdownData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={120} fill="#8884d8" labelLine={false} label={renderCustomizedLabel}>
+                                    {processedData.expenseBreakdownData.map((entry, index) => (
+                                        <Cell key={`cell-${index}`} fill={expenseBreakdownColors[index % expenseBreakdownColors.length]} />
+                                    ))}
+                                </Pie>
+                                <Tooltip formatter={(value) => formatCurrency(value)} />
+                            </PieChart>
+                        </ResponsiveContainer>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+
 const FinancesModule = () => {
-    const { students } = useContext(AppContext);
+    const { students, db, userId, appId } = useContext(AppContext);
     const [activeView, setActiveView] = useState('main');
     const [selectedStudent, setSelectedStudent] = useState(null);
+    const [transactions, setTransactions] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [dateRange, setDateRange] = useState('ytd');
+    const [isDataHidden, setIsDataHidden] = useState(false);
+
+    useEffect(() => {
+        if (!userId || !appId) return;
+        setIsLoading(true);
+        const transactionsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'transactions');
+        const unsubscribe = onSnapshot(transactionsCollectionPath, (snapshot) => {
+            const transactionsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setTransactions(transactionsData);
+            setIsLoading(false);
+        }, (error) => {
+            console.error("Error fetching transactions:", error);
+            setIsLoading(false);
+        });
+        return () => unsubscribe();
+    }, [db, userId, appId]);
 
     useEffect(() => {
         if (selectedStudent) {
@@ -1633,8 +1796,43 @@ const FinancesModule = () => {
     const handleCloseModal = () => {
         setSelectedStudent(null);
     };
+    
+    const formatCurrency = (value) => {
+        if (isDataHidden) return '₺--.--';
+        return `₺${(value || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+    };
+
+    const filteredTransactions = useMemo(() => {
+        const now = new Date();
+        let startDate = new Date(0);
+
+        switch (dateRange) {
+            case 'month':
+                startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                break;
+            case '3months':
+                startDate = new Date(now.getFullYear(), now.getMonth() - 3, 1);
+                break;
+            case '6months':
+                startDate = new Date(now.getFullYear(), now.getMonth() - 6, 1);
+                break;
+            case 'year':
+                 startDate = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+                break;
+            case 'ytd':
+                startDate = new Date(now.getFullYear(), 0, 1);
+                break;
+            default: // all time
+                startDate = new Date(0);
+        }
+        const startTimestamp = startDate.getTime();
+        return transactions.filter(t => t.date.toMillis() >= startTimestamp);
+    }, [dateRange, transactions]);
 
     const renderContent = () => {
+        if (isLoading) {
+            return <p className="text-center text-gray-500 py-8">Loading financial data...</p>;
+        }
         switch (activeView) {
             case 'studentPayments':
                 return <StudentPaymentsView onStudentSelect={handleStudentSelect} />;
@@ -1645,7 +1843,7 @@ const FinancesModule = () => {
             default:
                 return (
                     <>
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
                             <button onClick={() => setActiveView('studentPayments')} className="flex items-center justify-center text-left p-6 bg-white rounded-lg shadow-md hover:shadow-lg hover:bg-gray-50 transition-all">
                                 <Icon path={ICONS.STUDENTS} className="w-8 h-8 mr-4 text-blue-500"/>
                                 <h3 className="font-semibold text-xl text-gray-800">Student Payments</h3>
@@ -1659,27 +1857,56 @@ const FinancesModule = () => {
                                 <h3 className="font-semibold text-xl text-gray-800">Personal Expenses</h3>
                             </button>
                         </div>
-                         <div className="mt-8 bg-white p-6 rounded-lg shadow-md">
-                            <h3 className="font-semibold text-xl mb-4 text-gray-800">Financial Overview</h3>
-                            <p className="text-center text-gray-500 py-8">
-                                Charts and detailed financial analyses will be displayed here.
-                            </p>
-                        </div>
+                         <FinancialOverview transactions={filteredTransactions} isDataHidden={isDataHidden} formatCurrency={formatCurrency} />
                     </>
                 );
         }
     };
 
+    const dateFilters = [
+        { key: 'month', label: 'This Month' },
+        { key: '3months', label: 'Last 3 Months' },
+        { key: '6months', label: 'Last 6 Months' },
+        { key: 'ytd', label: 'Year to Date' },
+        { key: 'year', label: 'Last Year' },
+        { key: 'all', label: 'All Time' },
+    ];
+
     return (
         <div className="p-4 md:p-8">
-            <div className="flex items-center mb-6">
-                 {activeView !== 'main' && (
-                    <button onClick={() => setActiveView('main')} className="p-2 rounded-full hover:bg-gray-200 mr-4">
-                        <Icon path={ICONS.CHEVRON_LEFT} className="w-6 h-6" />
-                    </button>
+            <div className="flex justify-between items-center mb-6">
+                <div className="flex items-center">
+                    {activeView !== 'main' && (
+                        <button onClick={() => setActiveView('main')} className="p-2 rounded-full hover:bg-gray-200 mr-4">
+                            <Icon path={ICONS.CHEVRON_LEFT} className="w-6 h-6" />
+                        </button>
+                    )}
+                    <h2 className="text-3xl font-bold text-gray-800">Finances</h2>
+                </div>
+                {activeView === 'main' && (
+                    <div className="flex items-center space-x-2">
+                        <span className="text-sm font-medium text-gray-700">Hide Monetary Data</span>
+                        <button onClick={() => setIsDataHidden(!isDataHidden)} className={`p-1.5 rounded-full transition-colors ${isDataHidden ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-600'}`}>
+                           {isDataHidden ? <Icon path={ICONS.EYE_OFF} className="w-5 h-5"/> : <Icon path={ICONS.EYE} className="w-5 h-5"/>}
+                        </button>
+                    </div>
                 )}
-                <h2 className="text-3xl font-bold text-gray-800">Finances</h2>
             </div>
+
+            {activeView === 'main' && (
+                <div className="mb-6 flex flex-wrap gap-2">
+                    {dateFilters.map(filter => (
+                        <button 
+                            key={filter.key} 
+                            onClick={() => setDateRange(filter.key)}
+                            className={`px-3 py-1.5 text-sm font-medium rounded-full transition-colors ${dateRange === filter.key ? 'bg-blue-600 text-white' : 'bg-white text-gray-700 hover:bg-gray-100 shadow-sm'}`}
+                        >
+                            {filter.label}
+                        </button>
+                    ))}
+                </div>
+            )}
+
             {renderContent()}
             {selectedStudent && (
                 <StudentPaymentDetailsModal 
@@ -1762,7 +1989,207 @@ function EventFormModal({ isOpen, onClose }) {
     );
 }
 
-const Documents = () => <div className="p-8 text-2xl font-bold text-gray-800">Documents Module (Under Construction)</div>;
+const DocumentsModule = () => {
+    const { db, storage, userId, appId, students } = useContext(AppContext);
+    const [transactions, setTransactions] = useState([]);
+    const [mebDocs, setMebDocs] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [docToDelete, setDocToDelete] = useState(null);
+
+    // Fetch finance and MEB documents
+    useEffect(() => {
+        if (!userId || !appId) return;
+        
+        const transQuery = query(collection(db, 'artifacts', appId, 'users', userId, 'transactions'), where("invoiceUrl", "!=", ""));
+        const mebQuery = collection(db, 'artifacts', appId, 'users', userId, 'mebDocuments');
+
+        const unsubTransactions = onSnapshot(transQuery, snapshot => {
+            setTransactions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            setIsLoading(false);
+        });
+        
+        const unsubMeb = onSnapshot(mebQuery, snapshot => {
+            setMebDocs(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+            setIsLoading(false);
+        });
+
+        return () => {
+            unsubTransactions();
+            unsubMeb();
+        };
+    }, [db, userId, appId]);
+
+    const handleDelete = async () => {
+        if (!docToDelete) return;
+        
+        const { type, id, url } = docToDelete;
+        
+        try {
+            // Delete file from storage
+            const fileRef = ref(storage, url);
+            await deleteObject(fileRef);
+
+            // Delete reference from Firestore
+            if (type === 'student') {
+                const { studentId, docType } = docToDelete;
+                const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', studentId);
+                await updateDoc(studentDocRef, { [`documents.${docType}`]: '' });
+            } else if (type === 'finance') {
+                const transactionDocRef = doc(db, 'artifacts', appId, 'users', userId, 'transactions', id);
+                await updateDoc(transactionDocRef, { invoiceUrl: '' });
+            } else if (type === 'meb') {
+                const mebDocRef = doc(db, 'artifacts', appId, 'users', userId, 'mebDocuments', id);
+                await deleteDoc(mebDocRef);
+            }
+        } catch (error) {
+            console.error("Error deleting document:", error);
+        } finally {
+            setDocToDelete(null);
+        }
+    };
+
+    const studentDocs = students
+        .filter(s => s.documents?.nationalIdUrl || s.documents?.agreementUrl)
+        .flatMap(s => {
+            const docs = [];
+            if (s.documents.nationalIdUrl) docs.push({ studentId: s.id, studentName: s.fullName, docType: 'nationalIdUrl', name: `${s.fullName} - National ID`, url: s.documents.nationalIdUrl });
+            if (s.documents.agreementUrl) docs.push({ studentId: s.id, studentName: s.fullName, docType: 'agreementUrl', name: `${s.fullName} - Agreement`, url: s.documents.agreementUrl });
+            return docs;
+        });
+
+    return (
+        <div className="p-4 md:p-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Documents</h2>
+            <div className="space-y-8">
+                <DocumentCategory title="Student Documents" documents={studentDocs} onDelete={(doc) => setDocToDelete({ ...doc, type: 'student' })} />
+                <DocumentCategory title="Finance Documents (Invoices)" documents={transactions.map(t => ({...t, name: t.description, url: t.invoiceUrl}))} onDelete={(doc) => setDocToDelete({ ...doc, type: 'finance' })} />
+                <MebDocumentsCategory mebDocs={mebDocs} onDelete={(doc) => setDocToDelete({ ...doc, type: 'meb' })} />
+            </div>
+            {docToDelete && (
+                <ConfirmationModal
+                    isOpen={!!docToDelete}
+                    onClose={() => setDocToDelete(null)}
+                    onConfirm={handleDelete}
+                    title="Delete Document"
+                    message={`Are you sure you want to delete "${docToDelete.name}"? This action is permanent.`}
+                />
+            )}
+        </div>
+    );
+};
+
+const DocumentCategory = ({ title, documents, onDelete }) => (
+    <div className="bg-white rounded-lg shadow-md">
+        <h3 className="font-semibold text-xl p-4 md:p-6 border-b border-gray-200 text-gray-800">{title}</h3>
+        {documents.length > 0 ? (
+            <ul className="divide-y divide-gray-200">
+                {documents.map((doc, index) => (
+                    <li key={doc.id || index} className="p-4 flex justify-between items-center hover:bg-gray-50">
+                        <span className="text-gray-700 font-medium">{doc.name}</span>
+                        <div className="flex space-x-2">
+                            <a href={doc.url} target="_blank" rel="noopener noreferrer" className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EYE} className="w-5 h-5" /></a>
+                            <a href={doc.url} download className="p-2 text-gray-500 hover:text-green-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DOWNLOAD} className="w-5 h-5" /></a>
+                            <button onClick={() => onDelete(doc)} className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
+                        </div>
+                    </li>
+                ))}
+            </ul>
+        ) : (
+            <p className="p-6 text-gray-500">No documents found in this category.</p>
+        )}
+    </div>
+);
+
+const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
+    const { storage, db, userId, appId } = useContext(AppContext);
+    const [file, setFile] = useState(null);
+    const [docName, setDocName] = useState('');
+    const [isUploading, setIsUploading] = useState(false);
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            if (!docName) {
+                setDocName(selectedFile.name.replace(/\.[^/.]+$/, ""));
+            }
+        }
+    };
+
+    const handleUpload = async (e) => {
+        e.preventDefault();
+        if (!file || !docName) return;
+        setIsUploading(true);
+        
+        try {
+            const filePath = `artifacts/${appId}/users/${userId}/mebDocuments/${Date.now()}_${file.name}`;
+            const storageRef = ref(storage, filePath);
+            await uploadBytes(storageRef, file);
+            const url = await getDownloadURL(storageRef);
+
+            const mebCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'mebDocuments');
+            await addDoc(mebCollectionPath, {
+                documentName: docName,
+                fileUrl: url,
+                storagePath: filePath,
+                uploadDate: Timestamp.now(),
+            });
+
+            setFile(null);
+            setDocName('');
+            if(fileInputRef.current) fileInputRef.current.value = "";
+
+        } catch (error) {
+            console.error("Error uploading MEB document:", error);
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
+    return (
+        <div className="bg-white rounded-lg shadow-md">
+            <h3 className="font-semibold text-xl p-4 md:p-6 border-b border-gray-200 text-gray-800">MEB Documents</h3>
+            <div className="p-4 md:p-6">
+                <form onSubmit={handleUpload} className="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div className="md:col-span-2">
+                        <FormInput label="Document Name" value={docName} onChange={(e) => setDocName(e.target.value)} placeholder="e.g., Official Letter" required />
+                    </div>
+                    <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-gray-700 mb-1">File</label>
+                        <input type="file" ref={fileInputRef} onChange={handleFileChange} required className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"/>
+                    </div>
+                    <div className="md:col-span-1">
+                        <button type="submit" disabled={isUploading} className="w-full flex items-center justify-center px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400">
+                            <Icon path={ICONS.UPLOAD} className="w-5 h-5 mr-2" />
+                            {isUploading ? 'Uploading...' : 'Upload'}
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {mebDocs.length > 0 ? (
+                <ul className="divide-y divide-gray-200 border-t border-gray-200">
+                    {mebDocs.map(doc => (
+                        <li key={doc.id} className="p-4 flex justify-between items-center hover:bg-gray-50">
+                             <div>
+                                <span className="text-gray-700 font-medium">{doc.documentName}</span>
+                                <p className="text-xs text-gray-500">Uploaded: {doc.uploadDate.toDate().toLocaleDateString()}</p>
+                            </div>
+                            <div className="flex space-x-2">
+                                <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EYE} className="w-5 h-5" /></a>
+                                <a href={doc.fileUrl} download className="p-2 text-gray-500 hover:text-green-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DOWNLOAD} className="w-5 h-5" /></a>
+                                <button onClick={() => onDelete({ ...doc, name: doc.documentName, url: doc.storagePath })} className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p className="p-6 text-gray-500 border-t border-gray-200">No MEB documents uploaded yet.</p>
+            )}
+        </div>
+    );
+};
+
 
 const SettingsModule = () => (
     <div className="p-4 md:p-8">
@@ -1820,7 +2247,7 @@ const MainContent = ({ currentPage }) => {
             case 'students': return <StudentsModule />;
             case 'groups': return <GroupsModule />;
             case 'finances': return <FinancesModule />;
-            case 'documents': return <Documents />;
+            case 'documents': return <DocumentsModule />;
             case 'settings': return <SettingsModule />;
             default: return <DashboardModule />;
         }
@@ -1837,6 +2264,7 @@ export default function App() {
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
     const [groups, setGroups] = useState([]);
     const [students, setStudents] = useState([]);
+    const [transactions, setTransactions] = useState([]);
 
     useEffect(() => {
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
@@ -1872,10 +2300,17 @@ export default function App() {
             const studentsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             setStudents(studentsData);
         });
+        
+        const transactionsCollectionPath = collection(db, 'artifacts', appId, 'users', user.uid, 'transactions');
+        const unsubTransactions = onSnapshot(transactionsCollectionPath, (snapshot) => {
+            const transactionsData = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setTransactions(transactionsData);
+        });
 
         return () => {
             unsubGroups();
             unsubStudents();
+            unsubTransactions();
         };
     }, [user, db, appId]);
 
@@ -1884,7 +2319,7 @@ export default function App() {
     }
 
     return (
-        <AppContext.Provider value={{ db, storage, auth, userId: user.uid, appId, groups, students }}>
+        <AppContext.Provider value={{ db, storage, auth, userId: user.uid, appId, groups, students, transactions }}>
             <div className="flex h-screen font-sans text-gray-900 bg-gray-100">
                 <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isSidebarOpen={isSidebarOpen}/>
                 <div className="flex flex-col flex-1 min-w-0">
