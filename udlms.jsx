@@ -13,11 +13,11 @@ const Icon = ({ path, className = "w-6 h-6" }) => (
 );
 
 const ICONS = {
-    DASHBOARD: "M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z",
-    STUDENTS: "M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z",
+    DASHBOARD: "M13 13v8h8v-8h-8zM3 21h8v-8H3v8zM3 3v8h8V3H3zm13.66-1.31L11 7.34 16.66 13l5.66-5.66-5.66-5.65z",
+    STUDENTS: "M12 5.9c1.16 0 2.1.94 2.1 2.1s-.94 2.1-2.1 2.1S9.9 9.16 9.9 8s.94-2.1 2.1-2.1m0 9c2.97 0 6.1 1.46 6.1 2.1v1.1H5.9V17c0-.64 3.13-2.1 6.1-2.1M12 4C9.79 4 8 5.79 8 8s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 9c-2.67 0-8 1.34-8 4v3h16v-3c0-2.66-5.33-4-8-4z",
     GROUPS: "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z",
-    FINANCES: "M5 8v10h14V8H5zm16-4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 14H5V8h14v10z",
-    DOCUMENTS: "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z",
+    FINANCES: "M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-.9.6-1.6 1.8-1.6 1.2 0 1.8.6 1.8 1.5H14c0-1.5-1.2-2.7-3.2-2.7-2 0-3.2 1.3-3.2 2.8 0 1.9 1.4 2.6 3.4 3.1.9.2 1.4.5 1.4 1.1 0 .6-.6 1.1-1.5 1.1-1 0-1.5-.5-1.5-1.2H8c0 1.3 1.2 2.4 2.9 2.4 2.1 0 3.1-1.2 3.1-2.5 0-1.7-1.1-2.3-3.2-2.8zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z",
+    DOCUMENTS: "M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z",
     SETTINGS: "M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19-.15-.24-.42.12-.64l2 3.46c.12-.22.39.3.61-.22l2.49 1c.52.4 1.08.73 1.69-.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59-1.69-.98l2.49 1c.23.09.49 0 .61-.22l2 3.46c.12-.22-.07.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z",
     MENU: "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z",
     DELETE: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
@@ -1189,9 +1189,9 @@ const DashboardModule = () => {
         const processAllEvents = () => {
             const allItems = [...(window.lessons || []), ...(window.events || []), ...(window.birthdays || [])];
             
-            setTodaysSchedule(allItems.filter(i => getSortableTime(i) >= todayStart.getTime() && getSortableTime(i) <= todayEnd.getTime()).sort((a,b) => getSortableTime(a) - getSortableTime(b)));
+            setTodaysSchedule(allItems.filter(i => getSortableTime(i) >= now.getTime() && getSortableTime(i) <= todayEnd.getTime()).sort((a,b) => getSortableTime(a) - getSortableTime(b)));
             setWeekEvents(allItems.filter(i => getSortableTime(i) >= weekStart.getTime() && getSortableTime(i) < weekEnd.getTime()));
-            setUpcomingEvents(allItems.filter(i => getSortableTime(i) >= todayStart.getTime()).sort((a,b) => getSortableTime(a) - getSortableTime(b)));
+            setUpcomingEvents(allItems.filter(i => getSortableTime(i) >= now.getTime()).sort((a,b) => getSortableTime(a) - getSortableTime(b)));
         };
 
         const unsubLessons = onSnapshot(query(collection(db, 'artifacts', appId, 'users', userId, 'lessons'), where("lessonDate", ">=", todayStart)), (snapshot) => {
@@ -1359,7 +1359,7 @@ const WeeklyOverview = ({ events }) => {
             
                 <div className="col-start-1 col-span-1 row-start-2 grid" style={{gridTemplateRows: `repeat(${hours.length}, minmax(0, 1fr))`}}>
                      {hours.map(hour => (
-                        <div key={hour} className="h-16 text-right pr-2 border-t border-gray-200 flex items-center justify-end">
+                        <div key={hour} className="h-16 text-right pr-2 border-t border-gray-200 flex items-center justify-center">
                             <span className="text-sm text-gray-700">{`${hour.toString().padStart(2, '0')}:00`}</span>
                         </div>
                     ))}
@@ -2432,12 +2432,12 @@ const SettingsModule = () => {
             if (messageType === 'latePayment') {
                 const unpaid = student.installments?.find(i => i.status === 'Unpaid');
                 if (unpaid) {
-                    message = `Sayın ${student.fullName} Velisi,\n\nBu bir ödeme hatırlatmasıdır. Öğrencinizin ${unpaid.amount.toFixed(2)} ₺ tutarındaki #${unpaid.number} numaralı taksit ödemesinin son tarihi ${formatDate(unpaid.dueDate)} idi. Ödemenizi en kısa sürede yapmanızı rica ederiz.\n\nTeşekkürler,\nÜnlü Dil Kursu`;
+                    message = `Sayın Velimiz,\n\nBu bir ödeme hatırlatmasıdır. Öğrenciniz ${student.fullName}'nin ${unpaid.amount.toFixed(2)} ₺ tutarındaki #${unpaid.number} numaralı taksit ödemesinin son tarihi ${formatDate(unpaid.dueDate)} idi. Ödemenizi en kısa sürede yapmanızı rica ederiz.\n\nTeşekkürler,\nÜnlü Dil Kursu`;
                 } else {
-                    message = `Sayın ${student.fullName} Velisi,\n\nTüm ödemeleriniz güncel olduğu için teşekkür ederiz!\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
+                    message = `Sayın Velimiz,\n\nÖğrenciniz ${student.fullName} için tüm ödemeleriniz güncel olduğu için teşekkür ederiz!\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
                 }
             } else if (messageType === 'studentAbsence') {
-                message = `Sayın ${student.fullName} Velisi,\n\nÖğrenciniz ${student.fullName}'nin bugünkü derse katılmadığını fark ettik. Her şeyin yolunda olduğunu teyit etmek için bilgilendirme yapmak istedik.\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
+                message = `Sayın Velimiz,\n\nÖğrenciniz ${student.fullName}'nin bugünkü derse katılmadığını fark ettik. Her şeyin yolunda olduğunu teyit etmek için bilgilendirme yapmak istedik.\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
             }
             setGeneratedMessage(message);
         } else {
