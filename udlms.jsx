@@ -1,7 +1,7 @@
 import React, { useState, useEffect, createContext, useContext, useCallback, useRef, useMemo } from 'react';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from 'firebase/auth';
-import { getFirestore, setLogLevel, collection, onSnapshot, addDoc, doc, setDoc, deleteDoc, Timestamp, query, where, getDocs, updateDoc, writeBatch } from 'firebase/firestore';
+import { getFirestore, setLogLevel, collection, onSnapshot, addDoc, doc, setDoc, deleteDoc, Timestamp, query, where, getDocs, updateDoc, writeBatch, getDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, Sector } from 'recharts';
 
@@ -38,6 +38,7 @@ const ICONS = {
     INFO: "M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z",
     CAKE: "M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm6 3h-5.07c-.09-.24-.19-.48-.29-.71L12 7l-.64 1.29c-.1.23-.2.47-.29.71H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zm-6 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z",
     LESSON: "M14.5 11L12 9.5 9.5 11l.9-2.7L8 6.5h2.8l.9-2.7.9 2.7H15l-2.4 1.8.9 2.7zM20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z",
+    SAVE: "M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z",
 };
 
 // --- FIREBASE CONFIGURATION ---
@@ -325,6 +326,7 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
             isTutoring: studentToEdit?.isTutoring || false,
             groupId: studentToEdit?.groupId || null,
             documents: studentToEdit?.documents || { nationalIdUrl: '', agreementUrl: '' },
+            documentNames: studentToEdit?.documentNames || { nationalId: '', agreement: '' },
             feeDetails: studentToEdit?.feeDetails || { totalFee: '12000', numberOfInstallments: '3' },
             tutoringDetails: studentToEdit?.tutoringDetails || {
                 hourlyRate: '',
@@ -426,7 +428,6 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
 
 
         try {
-            // UPDATED PATH FOR STUDENT DOCUMENTS TO FIX PERMISSION ERROR
             const nationalIdUrl = await uploadFile(files.nationalId, `artifacts/${appId}/public/data/studentDocuments/${userId}/${Date.now()}_nationalId`);
             const agreementUrl = await uploadFile(files.agreement, `artifacts/${appId}/public/data/studentDocuments/${userId}/${Date.now()}_agreement`);
             if(nationalIdUrl) dataToSave.documents.nationalIdUrl = nationalIdUrl;
@@ -672,6 +673,7 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
     useEffect(() => {
         if (!student?.groupId) {
             setIsLoading(false);
+            setLessons([]);
             return;
         }
         setIsLoading(true);
@@ -684,6 +686,22 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
         });
         return unsubscribe;
     }, [db, userId, appId, student?.groupId]);
+
+    const paymentSummary = useMemo(() => {
+        if (student.isTutoring || !student.installments) return null;
+        const totalPaid = student.installments
+            .filter(i => i.status === 'Paid')
+            .reduce((sum, i) => sum + i.amount, 0);
+        const totalFee = parseFloat(student.feeDetails?.totalFee) || 0;
+        return { totalPaid, totalFee };
+    }, [student]);
+
+    const attendanceSummary = useMemo(() => {
+        if (student.isTutoring || lessons.length === 0) return null;
+        const presentCount = lessons.filter(l => l.attendance?.[student.id] === 'present').length;
+        const totalLessons = lessons.length;
+        return { presentCount, totalLessons };
+    }, [lessons, student.id]);
     
     const groupName = student.groupId ? groups.find(g => g.id === student.groupId)?.groupName : 'N/A';
     
@@ -726,41 +744,59 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
             )}
 
             {activeTab === 'payments' && (
-                 <ul className="divide-y divide-gray-200">
-                    {(student.installments || []).map(inst => (
-                        <li key={inst.number} className="py-3 flex justify-between items-center">
-                            <div>
-                                <p className="font-medium text-gray-800">Installment #{inst.number}</p>
-                                <p className="text-sm text-gray-500">Due: {formatDate(inst.dueDate)}</p>
-                            </div>
-                            <div className="text-right">
-                                <p className="font-semibold text-gray-800">₺{inst.amount.toFixed(2)}</p>
-                                {inst.status === 'Paid' ? (
-                                     <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Paid</span>
-                                ) : (
-                                     <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Unpaid</span>
-                                )}
-                            </div>
-                        </li>
-                    ))}
-                    {(student.installments || []).length === 0 && <p className="text-center text-gray-500 py-4">No payment plan found for this student.</p>}
-                </ul>
+                <div>
+                    {paymentSummary && (
+                        <div className="p-4 bg-blue-50 rounded-lg mb-4 text-center">
+                            <p className="font-semibold text-blue-800">
+                                Total Paid: ₺{paymentSummary.totalPaid.toFixed(2)} / ₺{paymentSummary.totalFee.toFixed(2)}
+                            </p>
+                        </div>
+                    )}
+                    <ul className="divide-y divide-gray-200">
+                        {(student.installments || []).map(inst => (
+                            <li key={inst.number} className="py-3 flex justify-between items-center">
+                                <div>
+                                    <p className="font-medium text-gray-800">Installment #{inst.number}</p>
+                                    <p className="text-sm text-gray-500">Due: {formatDate(inst.dueDate)}</p>
+                                </div>
+                                <div className="text-right">
+                                    <p className="font-semibold text-gray-800">₺{inst.amount.toFixed(2)}</p>
+                                    {inst.status === 'Paid' ? (
+                                        <span className="px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">Paid</span>
+                                    ) : (
+                                        <span className="px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">Unpaid</span>
+                                    )}
+                                </div>
+                            </li>
+                        ))}
+                        {(student.installments || []).length === 0 && <p className="text-center text-gray-500 py-4">No payment plan found for this student.</p>}
+                    </ul>
+                </div>
             )}
 
             {activeTab === 'attendance' && (
-                isLoading ? <p>Loading attendance...</p> :
-                <ul className="divide-y divide-gray-200">
-                    {lessons.map(lesson => (
-                        <li key={lesson.id} className="py-3 flex justify-between items-center">
-                             <div>
-                                <p className="font-medium text-gray-800">{lesson.topic}</p>
-                                <p className="text-sm text-gray-500">{formatDate(lesson.lessonDate)}</p>
-                            </div>
-                            {getAttendanceStatus(lesson.attendance?.[student.id])}
-                        </li>
-                    ))}
-                    {lessons.length === 0 && <p className="text-center text-gray-500 py-4">No lessons found for this student's group.</p>}
-                </ul>
+                 <div>
+                    {attendanceSummary && (
+                        <div className="p-4 bg-green-50 rounded-lg mb-4 text-center">
+                            <p className="font-semibold text-green-800">
+                                Attendance: {attendanceSummary.presentCount} / {attendanceSummary.totalLessons} lessons present
+                            </p>
+                        </div>
+                    )}
+                    {isLoading ? <p>Loading attendance...</p> :
+                    <ul className="divide-y divide-gray-200">
+                        {lessons.map(lesson => (
+                            <li key={lesson.id} className="py-3 flex justify-between items-center">
+                                <div>
+                                    <p className="font-medium text-gray-800">{lesson.topic}</p>
+                                    <p className="text-sm text-gray-500">{formatDate(lesson.lessonDate)}</p>
+                                </div>
+                                {getAttendanceStatus(lesson.attendance?.[student.id])}
+                            </li>
+                        ))}
+                        {lessons.length === 0 && <p className="text-center text-gray-500 py-4">No lessons found for this student's group.</p>}
+                    </ul>}
+                </div>
             )}
         </Modal>
     );
@@ -1409,11 +1445,19 @@ const WeeklyOverview = ({ events }) => {
 
 // --- FinancesModule.js ---
 const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
-    const { db, userId, appId } = useContext(AppContext);
+    const { db, userId, appId, transactions } = useContext(AppContext);
+    const [hours, setHours] = useState(1);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     if (!student) return null;
 
-    const handleLogPayment = async (installmentNumber) => {
+    const tutoringPayments = useMemo(() => {
+        return transactions
+            .filter(t => t.type === 'income-tutoring' && t.studentId === student.id)
+            .sort((a,b) => b.date.toMillis() - a.date.toMillis());
+    }, [transactions, student.id]);
+
+    const handleLogInstallmentPayment = async (installmentNumber) => {
         const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', student.id);
         
         const updatedInstallments = student.installments.map(inst => {
@@ -1435,13 +1479,43 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
                 studentId: student.id,
                 studentName: student.fullName,
                 amount: installmentToLog.amount,
-                date: Timestamp.now(), // Changed from paymentDate to date for consistency
+                date: Timestamp.now(), 
                 type: 'income-group',
                 description: `Installment #${installmentNumber} for ${student.fullName}`
             });
 
         } catch (error) {
             console.error("Error logging payment: ", error);
+        }
+    };
+
+    const handleLogTutoringPayment = async () => {
+        setIsSubmitting(true);
+        const hourlyRate = parseFloat(student.tutoringDetails?.hourlyRate) || 0;
+        const numHours = parseInt(hours, 10) || 0;
+        if (hourlyRate <= 0 || numHours <= 0) {
+            alert("Please enter a valid hourly rate and number of hours.");
+            setIsSubmitting(false);
+            return;
+        }
+
+        const totalAmount = hourlyRate * numHours;
+
+        try {
+            const transactionsCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'transactions');
+            await addDoc(transactionsCollectionPath, {
+                studentId: student.id,
+                studentName: student.fullName,
+                amount: totalAmount,
+                date: Timestamp.now(),
+                type: 'income-tutoring',
+                description: `Tutoring payment for ${numHours} hour(s).`
+            });
+            setHours(1); // Reset hours input
+        } catch (error) {
+            console.error("Error logging tutoring payment: ", error);
+        } finally {
+            setIsSubmitting(false);
         }
     };
     
@@ -1455,12 +1529,48 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose} title={modalTitle}>
             {student.isTutoring ? (
-                <div className="space-y-4">
-                    <p>Hourly Rate: ₺{student.tutoringDetails?.hourlyRate || 'N/A'}</p>
-                    <button className="w-full px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700">
-                        Log Tutoring Session Payment
-                    </button>
-                    <p className="text-center text-gray-500 py-4">Payment history for tutoring sessions will be shown here.</p>
+                <div className="space-y-6">
+                    <div>
+                        <h4 className="font-semibold text-lg mb-2">Log New Tutoring Payment</h4>
+                        <div className="p-4 bg-gray-50 rounded-lg space-y-4">
+                            <p><span className="font-medium">Hourly Rate:</span> ₺{student.tutoringDetails?.hourlyRate || 'N/A'}</p>
+                            <div className="flex items-end gap-4">
+                                <FormInput 
+                                    label="Number of Hours/Sessions" 
+                                    type="number" 
+                                    value={hours} 
+                                    onChange={(e) => setHours(e.target.value)} 
+                                    min="1"
+                                />
+                                <button 
+                                    onClick={handleLogTutoringPayment} 
+                                    disabled={isSubmitting}
+                                    className="px-4 py-2 h-10 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400"
+                                >
+                                    {isSubmitting ? 'Logging...' : 'Log Payment'}
+                                </button>
+                            </div>
+                            <p className="text-lg font-bold">Total: ₺{((student.tutoringDetails?.hourlyRate || 0) * (hours || 0)).toFixed(2)}</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 className="font-semibold text-lg mb-2">Payment History</h4>
+                        {tutoringPayments.length > 0 ? (
+                            <ul className="divide-y divide-gray-200 border-t border-b">
+                                {tutoringPayments.map(payment => (
+                                    <li key={payment.id} className="py-3 flex justify-between items-center">
+                                        <div>
+                                            <p className="font-medium text-gray-800">{payment.description}</p>
+                                            <p className="text-sm text-gray-500">{formatDate(payment.date)}</p>
+                                        </div>
+                                        <p className="font-semibold text-green-600">₺{payment.amount.toFixed(2)}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p className="text-center text-gray-500 py-4">No tutoring payments logged yet.</p>
+                        )}
+                    </div>
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -1482,7 +1592,7 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
                                         )}
                                     </div>
                                     {inst.status === 'Unpaid' && (
-                                        <button onClick={() => handleLogPayment(inst.number)} className="px-3 py-1 text-sm rounded-lg text-white bg-blue-600 hover:bg-blue-700">
+                                        <button onClick={() => handleLogInstallmentPayment(inst.number)} className="px-3 py-1 text-sm rounded-lg text-white bg-blue-600 hover:bg-blue-700">
                                             Log Payment
                                         </button>
                                     )}
@@ -1887,7 +1997,7 @@ const FinancialOverview = ({ transactions, isDataHidden, formatCurrency }) => {
                     <h3 className="text-gray-500 text-sm font-medium uppercase">Total Income</h3>
                     <p className="text-3xl font-bold text-green-600">{formatCurrency(processedData.totalIncome)}</p>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md text-center">
+                <div className="bg-white rounded-lg shadow-md text-center">
                     <h3 className="text-gray-500 text-sm font-medium uppercase">Total Expenses</h3>
                     <p className="text-3xl font-bold text-red-600">{formatCurrency(processedData.totalExpenses)}</p>
                 </div>
@@ -2184,19 +2294,53 @@ function EventFormModal({ isOpen, onClose }) {
     );
 }
 
+const EditDocNameModal = ({ isOpen, onClose, doc, onSave }) => {
+    const [newName, setNewName] = useState(doc?.name || '');
+    
+    useEffect(() => {
+        if(isOpen) {
+            setNewName(doc?.name || '');
+        }
+    }, [isOpen, doc]);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        onSave(newName);
+        onClose();
+    };
+
+    return (
+        <Modal isOpen={isOpen} onClose={onClose} title="Rename Document">
+            <form onSubmit={handleSubmit}>
+                <FormInput 
+                    label="New Document Name" 
+                    value={newName} 
+                    onChange={(e) => setNewName(e.target.value)} 
+                    required 
+                />
+                <div className="flex justify-end pt-6 mt-6 border-t border-gray-200 space-x-4">
+                    <button type="button" onClick={onClose} className="px-6 py-2 rounded-lg text-gray-700 bg-gray-200 hover:bg-gray-300">Cancel</button>
+                    <button type="submit" className="px-6 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700">Save</button>
+                </div>
+            </form>
+        </Modal>
+    )
+};
+
 const DocumentsModule = () => {
     const { db, storage, userId, appId, students } = useContext(AppContext);
     const [transactions, setTransactions] = useState([]);
     const [mebDocs, setMebDocs] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [docToDelete, setDocToDelete] = useState(null);
+    const [docToEdit, setDocToEdit] = useState(null);
 
     // Fetch finance and MEB documents
     useEffect(() => {
         if (!userId || !appId) return;
         
         const transQuery = query(collection(db, 'artifacts', appId, 'users', userId, 'transactions'), where("invoiceUrl", "!=", ""));
-        const mebQuery = collection(db, 'artifacts', appId, 'public', 'data', 'mebDocuments');
+        const mebQuery = collection(db, 'artifacts', appId, 'users', userId, 'mebDocuments');
 
         const unsubTransactions = onSnapshot(transQuery, snapshot => {
             setTransactions(snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })));
@@ -2220,20 +2364,23 @@ const DocumentsModule = () => {
         const { type, id, url } = docToDelete;
         
         try {
-            // Delete file from storage
-            const fileRef = ref(storage, url);
+            // For student docs, URL is the full download URL, but for MEB it's the storage path
+            const fileRef = type === 'meb' ? ref(storage, url) : ref(storage, docToDelete.url);
             await deleteObject(fileRef);
 
             // Delete reference from Firestore
             if (type === 'student') {
                 const { studentId, docType } = docToDelete;
                 const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', studentId);
-                await updateDoc(studentDocRef, { [`documents.${docType}`]: '' });
+                await updateDoc(studentDocRef, { 
+                    [`documents.${docType}`]: '',
+                    [`documentNames.${docType.replace('Url', '')}`]: ''
+                });
             } else if (type === 'finance') {
                 const transactionDocRef = doc(db, 'artifacts', appId, 'users', userId, 'transactions', id);
                 await updateDoc(transactionDocRef, { invoiceUrl: '' });
             } else if (type === 'meb') {
-                const mebDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'mebDocuments', id);
+                const mebDocRef = doc(db, 'artifacts', appId, 'users', userId, 'mebDocuments', id);
                 await deleteDoc(mebDocRef);
             }
         } catch (error) {
@@ -2243,12 +2390,38 @@ const DocumentsModule = () => {
         }
     };
 
+    const handleSaveName = async (newName) => {
+        if (!docToEdit) return;
+        const { type, id } = docToEdit;
+        try {
+             if (type === 'student') {
+                const { studentId, docType } = docToEdit;
+                const studentDocRef = doc(db, 'artifacts', appId, 'users', userId, 'students', studentId);
+                await updateDoc(studentDocRef, { [`documentNames.${docType.replace('Url', '')}`]: newName });
+            } else if (type === 'finance') {
+                const transactionDocRef = doc(db, 'artifacts', appId, 'users', userId, 'transactions', id);
+                await updateDoc(transactionDocRef, { description: newName });
+            } else if (type === 'meb') {
+                const mebDocRef = doc(db, 'artifacts', appId, 'users', userId, 'mebDocuments', id);
+                await updateDoc(mebDocRef, { documentName: newName });
+            }
+        } catch(error) {
+            console.error("Error updating document name:", error);
+        }
+    };
+
     const studentDocs = students
         .filter(s => s.documents?.nationalIdUrl || s.documents?.agreementUrl)
         .flatMap(s => {
             const docs = [];
-            if (s.documents.nationalIdUrl) docs.push({ studentId: s.id, studentName: s.fullName, docType: 'nationalIdUrl', name: `${s.fullName} - National ID`, url: s.documents.nationalIdUrl });
-            if (s.documents.agreementUrl) docs.push({ studentId: s.id, studentName: s.fullName, docType: 'agreementUrl', name: `${s.fullName} - Agreement`, url: s.documents.agreementUrl });
+            if (s.documents.nationalIdUrl) {
+                const name = s.documentNames?.nationalId || `${s.fullName} - National ID`;
+                docs.push({ studentId: s.id, studentName: s.fullName, docType: 'nationalIdUrl', name, url: s.documents.nationalIdUrl });
+            }
+            if (s.documents.agreementUrl) {
+                const name = s.documentNames?.agreement || `${s.fullName} - Agreement`;
+                docs.push({ studentId: s.id, studentName: s.fullName, docType: 'agreementUrl', name, url: s.documents.agreementUrl });
+            }
             return docs;
         });
 
@@ -2256,9 +2429,9 @@ const DocumentsModule = () => {
         <div className="p-4 md:p-8">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Documents</h2>
             <div className="space-y-8">
-                <DocumentCategory title="Student Documents" documents={studentDocs} onDelete={(doc) => setDocToDelete({ ...doc, type: 'student' })} />
-                <DocumentCategory title="Finance Documents (Invoices)" documents={transactions.map(t => ({...t, name: t.description, url: t.invoiceUrl}))} onDelete={(doc) => setDocToDelete({ ...doc, type: 'finance' })} />
-                <MebDocumentsCategory mebDocs={mebDocs} onDelete={(doc) => setDocToDelete({ ...doc, type: 'meb' })} />
+                <DocumentCategory title="Student Documents" documents={studentDocs} onEdit={(doc) => setDocToEdit({ ...doc, type: 'student' })} onDelete={(doc) => setDocToDelete({ ...doc, type: 'student' })} />
+                <DocumentCategory title="Finance Documents (Invoices)" documents={transactions.map(t => ({...t, name: t.description, url: t.invoiceUrl}))} onEdit={(doc) => setDocToEdit({ ...doc, type: 'finance' })} onDelete={(doc) => setDocToDelete({ ...doc, type: 'finance' })} />
+                <MebDocumentsCategory mebDocs={mebDocs} onEdit={(doc) => setDocToEdit({ ...doc, type: 'meb' })} onDelete={(doc) => setDocToDelete({ ...doc, type: 'meb' })} />
             </div>
             {docToDelete && (
                 <ConfirmationModal
@@ -2269,21 +2442,30 @@ const DocumentsModule = () => {
                     message={`Are you sure you want to delete "${docToDelete.name}"? This action is permanent.`}
                 />
             )}
+            {docToEdit && (
+                <EditDocNameModal 
+                    isOpen={!!docToEdit}
+                    onClose={() => setDocToEdit(null)}
+                    doc={docToEdit}
+                    onSave={handleSaveName}
+                />
+            )}
         </div>
     );
 };
 
-const DocumentCategory = ({ title, documents, onDelete }) => (
+const DocumentCategory = ({ title, documents, onEdit, onDelete }) => (
     <div className="bg-white rounded-lg shadow-md">
         <h3 className="font-semibold text-xl p-4 md:p-6 border-b border-gray-200 text-gray-800">{title}</h3>
         {documents.length > 0 ? (
             <ul className="divide-y divide-gray-200">
                 {documents.map((doc, index) => (
-                    <li key={doc.id || index} className="p-4 flex justify-between items-center hover:bg-gray-50">
+                    <li key={doc.id || doc.url} className="p-4 flex justify-between items-center hover:bg-gray-50">
                         <span className="text-gray-700 font-medium">{doc.name}</span>
                         <div className="flex space-x-2">
                             <a href={doc.url} target="_blank" rel="noopener noreferrer" className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EYE} className="w-5 h-5" /></a>
                             <a href={doc.url} download className="p-2 text-gray-500 hover:text-green-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DOWNLOAD} className="w-5 h-5" /></a>
+                            <button onClick={() => onEdit(doc)} className="p-2 text-gray-500 hover:text-yellow-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
                             <button onClick={() => onDelete(doc)} className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
                         </div>
                     </li>
@@ -2295,7 +2477,7 @@ const DocumentCategory = ({ title, documents, onDelete }) => (
     </div>
 );
 
-const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
+const MebDocumentsCategory = ({ mebDocs, onEdit, onDelete }) => {
     const { storage, db, userId, appId } = useContext(AppContext);
     const [file, setFile] = useState(null);
     const [docName, setDocName] = useState('');
@@ -2318,12 +2500,12 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
         setIsUploading(true);
         
         try {
-            const filePath = `artifacts/${appId}/public/data/mebDocuments/${Date.now()}_${file.name}`;
+            const filePath = `artifacts/${appId}/users/${userId}/mebDocuments/${Date.now()}_${file.name}`;
             const storageRef = ref(storage, filePath);
             await uploadBytes(storageRef, file);
             const url = await getDownloadURL(storageRef);
 
-            const mebCollectionPath = collection(db, 'artifacts', appId, 'public', 'data', 'mebDocuments');
+            const mebCollectionPath = collection(db, 'artifacts', appId, 'users', userId, 'mebDocuments');
             await addDoc(mebCollectionPath, {
                 documentName: docName,
                 fileUrl: url,
@@ -2373,6 +2555,7 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
                             <div className="flex space-x-2">
                                 <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EYE} className="w-5 h-5" /></a>
                                 <a href={doc.fileUrl} download className="p-2 text-gray-500 hover:text-green-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DOWNLOAD} className="w-5 h-5" /></a>
+                                <button onClick={() => onEdit({ ...doc, name: doc.documentName })} className="p-2 text-gray-500 hover:text-yellow-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EDIT} className="w-5 h-5" /></button>
                                 <button onClick={() => onDelete({ ...doc, name: doc.documentName, url: doc.storagePath })} className="p-2 text-gray-500 hover:text-red-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.DELETE} className="w-5 h-5" /></button>
                             </div>
                         </li>
@@ -2387,12 +2570,52 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
 
 
 const SettingsModule = () => {
-    const { students, groups, transactions, scriptsLoaded } = useContext(AppContext);
+    const { db, userId, appId, students, groups, transactions, scriptsLoaded } = useContext(AppContext);
     const [isExporting, setIsExporting] = useState(false);
     const [messageType, setMessageType] = useState('latePayment');
     const [selectedStudentId, setSelectedStudentId] = useState('');
     const [generatedMessage, setGeneratedMessage] = useState('');
     const [copySuccess, setCopySuccess] = useState('');
+    const [saveStatus, setSaveStatus] = useState('');
+
+    const defaultTemplates = {
+        latePayment: `Sayın Velimiz,\n\nBu bir ödeme hatırlatmasıdır. Öğrenciniz {studentName}'nin {amount} ₺ tutarındaki #{installmentNumber} numaralı taksit ödemesinin son tarihi {dueDate} idi. Ödemenizi en kısa sürede yapmanızı rica ederiz.\n\nTeşekkürler,\nÜnlü Dil Kursu`,
+        studentAbsence: `Sayın Velimiz,\n\nÖğrenciniz {studentName}'nin bugünkü derse katılmadığını fark ettik. Her şeyin yolunda olduğunu teyit etmek için bilgilendirme yapmak istedik.\n\nSaygılarımızla,\nÜnlü Dil Kursu`,
+    };
+
+    const [latePaymentTemplate, setLatePaymentTemplate] = useState(defaultTemplates.latePayment);
+    const [studentAbsenceTemplate, setStudentAbsenceTemplate] = useState(defaultTemplates.studentAbsence);
+
+    useEffect(() => {
+        const fetchTemplates = async () => {
+            if (!userId || !appId) return;
+            const templatesDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'messageTemplates');
+            const docSnap = await getDoc(templatesDocRef);
+            if (docSnap.exists()) {
+                const data = docSnap.data();
+                setLatePaymentTemplate(data.latePayment || defaultTemplates.latePayment);
+                setStudentAbsenceTemplate(data.studentAbsence || defaultTemplates.studentAbsence);
+            }
+        };
+        fetchTemplates();
+    }, [db, userId, appId]);
+
+    const handleSaveTemplates = async () => {
+        setSaveStatus('Saving...');
+        try {
+            const templatesDocRef = doc(db, 'artifacts', appId, 'users', userId, 'settings', 'messageTemplates');
+            await setDoc(templatesDocRef, {
+                latePayment: latePaymentTemplate,
+                studentAbsence: studentAbsenceTemplate,
+            }, { merge: true });
+            setSaveStatus('Saved!');
+        } catch (error) {
+            console.error("Error saving templates:", error);
+            setSaveStatus('Error!');
+        } finally {
+            setTimeout(() => setSaveStatus(''), 2000);
+        }
+    };
 
     const handleExport = async () => {
         if (!scriptsLoaded) {
@@ -2402,11 +2625,9 @@ const SettingsModule = () => {
         setIsExporting(true);
         const zip = new window.JSZip();
 
-        // Add student and group data as JSON
         zip.file("students.json", JSON.stringify(students, null, 2));
         zip.file("groups.json", JSON.stringify(groups, null, 2));
 
-        // Create folders
         const studentDocsFolder = zip.folder("student_documents");
         const financeDocsFolder = zip.folder("finance_documents");
         
@@ -2432,18 +2653,22 @@ const SettingsModule = () => {
             if (messageType === 'latePayment') {
                 const unpaid = student.installments?.find(i => i.status === 'Unpaid');
                 if (unpaid) {
-                    message = `Sayın Velimiz,\n\nBu bir ödeme hatırlatmasıdır. Öğrenciniz ${student.fullName}'nin ${unpaid.amount.toFixed(2)} ₺ tutarındaki #${unpaid.number} numaralı taksit ödemesinin son tarihi ${formatDate(unpaid.dueDate)} idi. Ödemenizi en kısa sürede yapmanızı rica ederiz.\n\nTeşekkürler,\nÜnlü Dil Kursu`;
+                    message = latePaymentTemplate
+                        .replace('{studentName}', student.fullName)
+                        .replace('{amount}', unpaid.amount.toFixed(2))
+                        .replace('{installmentNumber}', unpaid.number)
+                        .replace('{dueDate}', formatDate(unpaid.dueDate));
                 } else {
                     message = `Sayın Velimiz,\n\nÖğrenciniz ${student.fullName} için tüm ödemeleriniz güncel olduğu için teşekkür ederiz!\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
                 }
             } else if (messageType === 'studentAbsence') {
-                message = `Sayın Velimiz,\n\nÖğrenciniz ${student.fullName}'nin bugünkü derse katılmadığını fark ettik. Her şeyin yolunda olduğunu teyit etmek için bilgilendirme yapmak istedik.\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
+                message = studentAbsenceTemplate.replace('{studentName}', student.fullName);
             }
             setGeneratedMessage(message);
         } else {
             setGeneratedMessage('');
         }
-    }, [selectedStudentId, messageType, students]);
+    }, [selectedStudentId, messageType, students, latePaymentTemplate, studentAbsenceTemplate]);
     
     const handleCopy = () => {
         const textArea = document.createElement("textarea");
@@ -2453,10 +2678,10 @@ const SettingsModule = () => {
         textArea.select();
         try {
             document.execCommand('copy');
-            setCopySuccess('Kopyalandı!');
+            setCopySuccess('Copied!');
             setTimeout(() => setCopySuccess(''), 2000);
         } catch (err) {
-            setCopySuccess('Kopyalanamadı!');
+            setCopySuccess('Failed!');
         }
         document.body.removeChild(textArea);
     };
@@ -2488,11 +2713,32 @@ const SettingsModule = () => {
                     </div>
                     <div className="mt-4">
                         <label className="block text-sm font-medium text-gray-700 mb-1">Generated Message</label>
-                        <textarea value={generatedMessage} onChange={e => setGeneratedMessage(e.target.value)} rows="6" className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                        <textarea value={generatedMessage} readOnly rows="6" className="block w-full px-3 py-2 bg-gray-50 border border-gray-300 rounded-md shadow-sm sm:text-sm"></textarea>
                     </div>
                     <div className="mt-4">
                         <button onClick={handleCopy} disabled={!generatedMessage} className="px-4 py-2 rounded-lg text-white bg-green-600 hover:bg-green-700 disabled:bg-green-400">
                             {copySuccess || 'Copy Message'}
+                        </button>
+                    </div>
+                </div>
+                 <div className="bg-white p-6 rounded-lg shadow-md">
+                    <h3 className="text-xl font-semibold text-gray-800 mb-4">Message Templates</h3>
+                    <div className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Late Payment Template</label>
+                            <textarea value={latePaymentTemplate} onChange={e => setLatePaymentTemplate(e.target.value)} rows="6" className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                            <p className="text-xs text-gray-500 mt-1">Placeholders: {`{studentName}, {amount}, {installmentNumber}, {dueDate}`}</p>
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">Student Absence Template</label>
+                            <textarea value={studentAbsenceTemplate} onChange={e => setStudentAbsenceTemplate(e.target.value)} rows="4" className="block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                             <p className="text-xs text-gray-500 mt-1">Placeholder: {`{studentName}`}</p>
+                        </div>
+                    </div>
+                    <div className="mt-4">
+                        <button onClick={handleSaveTemplates} className="flex items-center justify-center px-4 py-2 rounded-lg text-white bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400">
+                            <Icon path={ICONS.SAVE} className="w-5 h-5 mr-2"/>
+                            {saveStatus || 'Save Templates'}
                         </button>
                     </div>
                 </div>
