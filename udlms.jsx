@@ -13,12 +13,12 @@ const Icon = ({ path, className = "w-6 h-6" }) => (
 );
 
 const ICONS = {
-    DASHBOARD: "M10 20h4V4h-4v16zm-6 0h4v-8H4v8zM16 9v11h4V9h-4z",
+    DASHBOARD: "M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z",
     STUDENTS: "M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z",
     GROUPS: "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z",
     FINANCES: "M5 8v10h14V8H5zm16-4H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-2 14H5V8h14v10z",
     DOCUMENTS: "M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z",
-    SETTINGS: "M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19-.15-.24-.42.12-.64l2 3.46c.12-.22.39.3.61-.22l2.49-1c.52.4 1.08.73 1.69-.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59-1.69-.98l2.49 1c.23.09.49 0 .61-.22l2 3.46c.12-.22-.07.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z",
+    SETTINGS: "M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19-.15-.24-.42.12-.64l2 3.46c.12-.22.39.3.61-.22l2.49 1c.52.4 1.08.73 1.69-.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59-1.69-.98l2.49 1c.23.09.49 0 .61-.22l2 3.46c.12-.22-.07.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z",
     MENU: "M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z",
     DELETE: "M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z",
     EDIT: "M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z",
@@ -37,6 +37,7 @@ const ICONS = {
     UPLOAD: "M9 16h6v-6h4l-8-8-8 8h4v6zm-4 2h14v2H5v-2z",
     INFO: "M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z",
     CAKE: "M12 6c1.11 0 2-.9 2-2 0-.38-.1-.73-.29-1.03L12 0l-1.71 2.97c-.19.3-.29.65-.29 1.03 0 1.1.9 2 2 2zm6 3h-5.07c-.09-.24-.19-.48-.29-.71L12 7l-.64 1.29c-.1.23-.2.47-.29.71H6c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zm-6 11c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z",
+    LESSON: "M14.5 11L12 9.5 9.5 11l.9-2.7L8 6.5h2.8l.9-2.7.9 2.7H15l-2.4 1.8.9 2.7zM20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16z",
 };
 
 // --- FIREBASE CONFIGURATION ---
@@ -55,6 +56,17 @@ const storage = getStorage(app);
 
 // --- APP CONTEXT ---
 const AppContext = createContext();
+
+// --- UTILITY FUNCTIONS ---
+const formatDate = (timestamp) => {
+    if (!timestamp || typeof timestamp.toDate !== 'function') return 'N/A';
+    const date = timestamp.toDate();
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}.${month}.${year}`;
+};
+
 
 // --- HOOKS ---
 const useClickOutside = (ref, handler) => {
@@ -77,17 +89,35 @@ const useClickOutside = (ref, handler) => {
 
 // --- REUSABLE UI COMPONENTS ---
 const Modal = ({ isOpen, onClose, title, children }) => {
+    const [show, setShow] = useState(false);
+
+    useEffect(() => {
+        if (isOpen) {
+            setTimeout(() => setShow(true), 10); // Delay to allow CSS transition
+        } else {
+            setShow(false);
+        }
+    }, [isOpen]);
+
     if (!isOpen) return null;
+
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60" onClick={onClose}>
-            <div className="bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col" onClick={e => e.stopPropagation()}>
-                <div className="flex items-center justify-between p-4 border-b border-gray-200 sticky top-0 bg-white z-10">
+        <div 
+            className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-300 ${show ? 'opacity-100' : 'opacity-0'}`}
+            onClick={onClose}
+        >
+            <div className="absolute inset-0 bg-gradient-to-br from-slate-900/50 to-slate-700/50 backdrop-blur-sm"></div>
+            <div 
+                className={`bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] flex flex-col transform transition-all duration-300 ${show ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}
+                onClick={e => e.stopPropagation()}
+            >
+                <div className="flex items-center justify-between p-5 border-b border-gray-200 sticky top-0 bg-blue-600 text-white z-10 rounded-t-lg">
                     {typeof title === 'string' ? (
-                        <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+                        <h3 className="text-2xl font-bold">{title}</h3>
                     ) : (
                         <div>{title}</div>
                     )}
-                    <button onClick={onClose} className="p-2 rounded-full text-gray-500 hover:bg-gray-200"><Icon path={ICONS.CLOSE} /></button>
+                    <button onClick={onClose} className="p-2 rounded-full text-white/70 hover:bg-white/20 transition-colors"><Icon path={ICONS.CLOSE} /></button>
                 </div>
                 <div className="p-6 overflow-y-auto">{children}</div>
             </div>
@@ -190,7 +220,7 @@ const CustomDatePicker = ({ label, value, onChange, name }) => {
         <div className="relative" ref={pickerRef}>
             <FormInput 
                 label={label} 
-                value={value} 
+                value={value ? formatDate(Timestamp.fromDate(new Date(value.replace(/-/g, '/')))) : ''}
                 readOnly 
                 onClick={() => setIsOpen(!isOpen)} 
                 icon={<Icon path={ICONS.CALENDAR} className="w-5 h-5 text-gray-400"/>}
@@ -396,8 +426,9 @@ const StudentFormModal = ({ isOpen, onClose, studentToEdit }) => {
 
 
         try {
-            const nationalIdUrl = await uploadFile(files.nationalId, `artifacts/${appId}/users/${userId}/students/${Date.now()}_nationalId`);
-            const agreementUrl = await uploadFile(files.agreement, `artifacts/${appId}/users/${userId}/students/${Date.now()}_agreement`);
+            // UPDATED PATH FOR STUDENT DOCUMENTS TO FIX PERMISSION ERROR
+            const nationalIdUrl = await uploadFile(files.nationalId, `artifacts/${appId}/public/data/studentDocuments/${userId}/${Date.now()}_nationalId`);
+            const agreementUrl = await uploadFile(files.agreement, `artifacts/${appId}/public/data/studentDocuments/${userId}/${Date.now()}_agreement`);
             if(nationalIdUrl) dataToSave.documents.nationalIdUrl = nationalIdUrl;
             if(agreementUrl) dataToSave.documents.agreementUrl = agreementUrl;
             
@@ -608,7 +639,7 @@ const StudentsModule = () => {
                                     <tr key={student.id} className="hover:bg-gray-50">
                                         <td className="p-4 text-gray-800">{student.fullName}</td>
                                         <td className="p-4 text-gray-600">{student.studentContact}</td>
-                                        <td className="p-4 text-gray-600">{student.enrollmentDate?.toDate().toLocaleDateString()}</td>
+                                        <td className="p-4 text-gray-600">{formatDate(student.enrollmentDate)}</td>
                                         <td className="p-4">
                                             <div className="flex space-x-2">
                                                 <button onClick={() => openDetailsModal(student)} className="p-2 text-gray-600 hover:text-blue-800 rounded-full hover:bg-gray-200"><Icon path={ICONS.INFO} className="w-5 h-5" /></button>
@@ -668,8 +699,8 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
 
     const modalTitle = (
         <div>
-            <h3 className="text-xl font-bold text-gray-800">{student.fullName}</h3>
-            <p className="text-sm text-gray-500">Student Details</p>
+            <h3 className="text-xl font-bold">{student.fullName}</h3>
+            <p className="text-sm text-white/80">Student Details</p>
         </div>
     );
     
@@ -687,8 +718,8 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div className="font-medium text-gray-500">Student Contact:</div><div className="text-gray-800">{student.studentContact}</div>
                     <div className="font-medium text-gray-500">Parent Contact:</div><div className="text-gray-800">{student.parentContact || 'N/A'}</div>
-                    <div className="font-medium text-gray-500">Enrollment Date:</div><div className="text-gray-800">{student.enrollmentDate?.toDate().toLocaleDateString()}</div>
-                    <div className="font-medium text-gray-500">Birth Date:</div><div className="text-gray-800">{student.birthDate ? student.birthDate.toDate().toLocaleDateString() : 'N/A'}</div>
+                    <div className="font-medium text-gray-500">Enrollment Date:</div><div className="text-gray-800">{formatDate(student.enrollmentDate)}</div>
+                    <div className="font-medium text-gray-500">Birth Date:</div><div className="text-gray-800">{student.birthDate ? formatDate(student.birthDate) : 'N/A'}</div>
                     <div className="font-medium text-gray-500">Student Type:</div><div className="text-gray-800">{student.isTutoring ? 'Tutoring' : 'Group'}</div>
                     {!student.isTutoring && <><div className="font-medium text-gray-500">Group:</div><div className="text-gray-800">{groupName}</div></>}
                 </div>
@@ -700,7 +731,7 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
                         <li key={inst.number} className="py-3 flex justify-between items-center">
                             <div>
                                 <p className="font-medium text-gray-800">Installment #{inst.number}</p>
-                                <p className="text-sm text-gray-500">Due: {inst.dueDate.toDate().toLocaleDateString()}</p>
+                                <p className="text-sm text-gray-500">Due: {formatDate(inst.dueDate)}</p>
                             </div>
                             <div className="text-right">
                                 <p className="font-semibold text-gray-800">₺{inst.amount.toFixed(2)}</p>
@@ -723,7 +754,7 @@ const StudentDetailsModal = ({ isOpen, onClose, student }) => {
                         <li key={lesson.id} className="py-3 flex justify-between items-center">
                              <div>
                                 <p className="font-medium text-gray-800">{lesson.topic}</p>
-                                <p className="text-sm text-gray-500">{lesson.lessonDate.toDate().toLocaleDateString()}</p>
+                                <p className="text-sm text-gray-500">{formatDate(lesson.lessonDate)}</p>
                             </div>
                             {getAttendanceStatus(lesson.attendance?.[student.id])}
                         </li>
@@ -1001,8 +1032,8 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
 
     const modalTitle = (
         <div>
-            <h3 className="text-xl font-bold text-gray-800">{group.groupName}</h3>
-            <p className="text-sm text-gray-500">Details</p>
+            <h3 className="text-xl font-bold">{group.groupName}</h3>
+            <p className="text-sm text-white/80">Group Details</p>
         </div>
     );
 
@@ -1024,7 +1055,7 @@ const GroupDetailsModal = ({ isOpen, onClose, group, students }) => {
                                         <li key={lesson.id} className="py-3 flex items-center justify-between">
                                             <div>
                                                 <p className="font-medium text-gray-800">{lesson.topic}</p>
-                                                <p className="text-sm text-gray-500">{lesson.lessonDate.toDate().toLocaleDateString()}</p>
+                                                <p className="text-sm text-gray-500">{formatDate(lesson.lessonDate)}</p>
                                             </div>
                                             <div className="flex items-center space-x-2">
                                                 <button onClick={() => openAttendanceModal(lesson)} className="text-sm text-gray-500 hover:text-gray-700">Attendance</button>
@@ -1109,7 +1140,7 @@ const AttendanceModal = ({ isOpen, onClose, lesson, students }) => {
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title={`Attendance for ${lesson.topic} on ${lesson.lessonDate.toDate().toLocaleDateString()}`}>
+        <Modal isOpen={isOpen} onClose={onClose} title={`Attendance for ${lesson.topic} on ${formatDate(lesson.lessonDate)}`}>
             <ul className="divide-y divide-gray-200">
                 {students.map(student => (
                     <li key={student.id} className="py-4 flex items-center justify-between">
@@ -1164,7 +1195,7 @@ const DashboardModule = () => {
         };
 
         const unsubLessons = onSnapshot(query(collection(db, 'artifacts', appId, 'users', userId, 'lessons'), where("lessonDate", ">=", todayStart)), (snapshot) => {
-            window.lessons = snapshot.docs.map(doc => ({id: doc.id, type: 'lesson', topic: doc.data().topic, startTime: doc.data().lessonDate }));
+            window.lessons = snapshot.docs.map(doc => ({id: doc.id, type: 'lesson', eventName: doc.data().topic, startTime: doc.data().lessonDate }));
             processAllEvents();
         });
 
@@ -1173,7 +1204,6 @@ const DashboardModule = () => {
             processAllEvents();
         });
         
-        // Process birthdays from context
         const currentYear = new Date().getFullYear();
         window.birthdays = students.filter(s => s.birthDate).map(s => {
             const birthDate = s.birthDate.toDate();
@@ -1197,26 +1227,48 @@ const DashboardModule = () => {
         }
 
     }, [db, userId, appId, students]);
+    
+    const EventIcon = ({type}) => {
+        const iconMap = {
+            lesson: { path: ICONS.LESSON, color: 'bg-blue-100 text-blue-600' },
+            birthday: { path: ICONS.CAKE, color: 'bg-pink-100 text-pink-600' },
+            event: { path: ICONS.CALENDAR, color: 'bg-green-100 text-green-600' },
+        };
+        const { path, color } = iconMap[type] || iconMap.event;
+        return <div className={`w-8 h-8 rounded-lg flex items-center justify-center mr-4 ${color}`}><Icon path={path} className="w-5 h-5"/></div>
+    };
 
     return (
         <div className="p-4 md:p-8">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Dashboard</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-gray-500 text-sm font-medium">Total Students</h3>
-                    <p className="text-3xl font-bold text-gray-800">{students.length}</p>
+                 <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <div className="bg-blue-100 text-blue-600 rounded-full p-3 mr-4"><Icon path={ICONS.STUDENTS}/></div>
+                    <div>
+                        <h3 className="text-gray-500 text-sm font-medium">Total Students</h3>
+                        <p className="text-3xl font-bold text-gray-800">{students.length}</p>
+                    </div>
                 </div>
-                <div className="bg-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-gray-500 text-sm font-medium">Total Groups</h3>
-                    <p className="text-3xl font-bold text-gray-800">{groups.length}</p>
+                 <div className="bg-white p-6 rounded-lg shadow-md flex items-center">
+                    <div className="bg-green-100 text-green-600 rounded-full p-3 mr-4"><Icon path={ICONS.GROUPS}/></div>
+                    <div>
+                        <h3 className="text-gray-500 text-sm font-medium">Total Groups</h3>
+                        <p className="text-3xl font-bold text-gray-800">{groups.length}</p>
+                    </div>
                 </div>
-                <button onClick={() => setIsStudentModalOpen(true)} className="bg-blue-600 text-white p-6 rounded-lg shadow-md hover:bg-blue-700 transition-colors text-left">
-                    <h3 className="text-lg font-semibold">Enroll Student</h3>
-                    <p className="text-sm opacity-80">Add a new student to the system.</p>
+                <button onClick={() => setIsStudentModalOpen(true)} className="bg-blue-600 text-white p-6 rounded-lg shadow-md hover:bg-blue-700 transition-colors text-left flex items-center">
+                    <Icon path={ICONS.ADD} className="w-8 h-8 mr-4"/>
+                    <div>
+                        <h3 className="text-lg font-semibold">Enroll Student</h3>
+                        <p className="text-sm opacity-80">Add a new student.</p>
+                    </div>
                 </button>
-                <button onClick={() => setIsEventModalOpen(true)} className="bg-green-600 text-white p-6 rounded-lg shadow-md hover:bg-green-700 transition-colors text-left">
-                    <h3 className="text-lg font-semibold">Log Event</h3>
-                    <p className="text-sm opacity-80">Add a new event to the calendar.</p>
+                <button onClick={() => setIsEventModalOpen(true)} className="bg-green-600 text-white p-6 rounded-lg shadow-md hover:bg-green-700 transition-colors text-left flex items-center">
+                     <Icon path={ICONS.CALENDAR} className="w-8 h-8 mr-4"/>
+                    <div>
+                        <h3 className="text-lg font-semibold">Log Event</h3>
+                        <p className="text-sm opacity-80">Add a new event.</p>
+                    </div>
                 </button>
             </div>
             
@@ -1224,37 +1276,37 @@ const DashboardModule = () => {
                 <div className="lg:col-span-1 bg-white p-6 rounded-lg shadow-md">
                     <h3 className="font-semibold mb-4 text-gray-800">Today's Schedule</h3>
                     {todaysSchedule.length > 0 ? (
-                        <ul className="space-y-3">
+                        <ul className="space-y-4">
                             {todaysSchedule.map(item => (
                                 <li key={item.id} className="flex items-center">
-                                    <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : item.type === 'birthday' ? 'bg-pink-500' : 'bg-green-500'}`}></div>
+                                    <EventIcon type={item.type} />
                                     <div>
-                                        <p className="font-medium text-gray-800">{item.type === 'lesson' ? item.topic : item.eventName}</p>
+                                        <p className="font-medium text-gray-800">{item.eventName}</p>
                                         <p className="text-sm text-gray-500">{item.startTime.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</p>
                                     </div>
                                 </li>
                             ))}
                         </ul>
                     ) : (
-                        <p className="text-gray-500">No events or lessons scheduled for today.</p>
+                        <p className="text-gray-500 text-center py-4">No events or lessons scheduled for today.</p>
                     )}
                 </div>
                 <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-md">
                      <h3 className="font-semibold mb-4 text-gray-800">Upcoming Events</h3>
                      {upcomingEvents.length > 0 ? (
-                        <ul className="space-y-3">
+                        <ul className="space-y-4">
                             {upcomingEvents.slice(0, 5).map((item, index) => (
-                                <li key={item.id} className={`p-2 rounded-md flex items-center ${index === 0 ? 'bg-blue-100' : ''}`}>
-                                     <div className={`w-2 h-2 rounded-full mr-3 ${item.type === 'lesson' ? 'bg-blue-500' : item.type === 'birthday' ? 'bg-pink-500' : 'bg-green-500'}`}></div>
+                                <li key={item.id} className={`p-3 rounded-lg flex items-center ${index === 0 ? 'bg-blue-50' : ''}`}>
+                                     <EventIcon type={item.type} />
                                     <div>
-                                        <p className="font-medium text-gray-800">{item.type === 'lesson' ? item.topic : item.eventName}</p>
+                                        <p className="font-medium text-gray-800">{item.eventName}</p>
                                         <p className="text-sm text-gray-500">{item.startTime.toDate().toLocaleDateString([], {weekday: 'long', month: 'long', day: 'numeric'})}</p>
                                     </div>
                                 </li>
                             ))}
                         </ul>
                      ) : (
-                        <p className="text-gray-500">No upcoming events.</p>
+                        <p className="text-gray-500 text-center py-4">No upcoming events.</p>
                      )}
                 </div>
             </div>
@@ -1301,7 +1353,7 @@ const WeeklyOverview = ({ events }) => {
                 {weekDates.map((date, i) => (
                     <div key={i} className={`text-center font-semibold p-2 border-l border-b border-gray-200 ${i === todayIndex ? 'text-blue-600' : 'text-gray-600'}`}>
                         <div>{date.toLocaleDateString('en-US', { weekday: 'short' })}</div>
-                        <div className="text-xs font-normal">{date.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit' })}</div>
+                        <div className="text-xs font-normal">{formatDate(Timestamp.fromDate(date))}</div>
                     </div>
                 ))}
             
@@ -1344,7 +1396,7 @@ const WeeklyOverview = ({ events }) => {
                                     width: `calc(${width}% - 2px)`,
                                     backgroundColor: getEventColor(event.type)
                                  }}>
-                                <p className="font-bold truncate w-full">{event.type === 'lesson' ? event.topic : event.eventName}</p>
+                                <p className="font-bold truncate w-full">{event.eventName}</p>
                                 <p className="text-white/80 truncate w-full">{startTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})} - {endTime.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'})}</p>
                             </div>
                         )
@@ -1395,8 +1447,8 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
     
     const modalTitle = (
         <div>
-            <h3 className="text-xl font-bold text-gray-800">{student.fullName}</h3>
-            <p className="text-sm text-gray-500">Payment Details</p>
+            <h3 className="text-xl font-bold">{student.fullName}</h3>
+            <p className="text-sm text-white/80">Payment Details</p>
         </div>
     );
     
@@ -1418,7 +1470,7 @@ const StudentPaymentDetailsModal = ({ isOpen, onClose, student }) => {
                             <li key={inst.number} className="py-3 flex justify-between items-center">
                                 <div>
                                     <p className="font-medium text-gray-800">Installment #{inst.number}</p>
-                                    <p className="text-sm text-gray-500">Due: {inst.dueDate.toDate().toLocaleDateString()}</p>
+                                    <p className="text-sm text-gray-500">Due: {formatDate(inst.dueDate)}</p>
                                 </div>
                                 <div className="text-right flex items-center space-x-4">
                                     <div>
@@ -1540,7 +1592,7 @@ const BusinessExpensesView = ({}) => {
         let invoiceUrl = '';
         try {
             if (invoiceFile) {
-                const storageRef = ref(storage, `artifacts/${appId}/users/${userId}/invoices/${Date.now()}_${invoiceFile.name}`);
+                const storageRef = ref(storage, `artifacts/${appId}/public/data/invoices/${Date.now()}_${invoiceFile.name}`);
                 await uploadBytes(storageRef, invoiceFile);
                 invoiceUrl = await getDownloadURL(storageRef);
             }
@@ -1625,7 +1677,7 @@ const BusinessExpensesView = ({}) => {
                             {expenses.length > 0 ? (
                                 expenses.map(expense => (
                                     <tr key={expense.id} className="hover:bg-gray-50">
-                                        <td className="p-4 text-gray-600">{expense.date.toDate().toLocaleDateString()}</td>
+                                        <td className="p-4 text-gray-600">{formatDate(expense.date)}</td>
                                         <td className="p-4 text-gray-800">{expense.category}</td>
                                         <td className="p-4 text-gray-800">{expense.description}</td>
                                         <td className="p-4 text-gray-800 font-semibold text-right">₺{expense.amount.toFixed(2)}</td>
@@ -1744,7 +1796,7 @@ const PersonalExpensesView = () => {
                             {expenses.length > 0 ? (
                                 expenses.map(expense => (
                                     <tr key={expense.id} className="hover:bg-gray-50">
-                                        <td className="p-4 text-gray-600">{expense.date.toDate().toLocaleDateString()}</td>
+                                        <td className="p-4 text-gray-600">{formatDate(expense.date)}</td>
                                         <td className="p-4 text-gray-800">{expense.category}</td>
                                         <td className="p-4 text-gray-800">{expense.description}</td>
                                         <td className="p-4 text-gray-800 font-semibold text-right">₺{expense.amount.toFixed(2)}</td>
@@ -2266,7 +2318,7 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
         setIsUploading(true);
         
         try {
-            const filePath = `artifacts/${appId}/public/mebDocuments/${Date.now()}_${file.name}`;
+            const filePath = `artifacts/${appId}/public/data/mebDocuments/${Date.now()}_${file.name}`;
             const storageRef = ref(storage, filePath);
             await uploadBytes(storageRef, file);
             const url = await getDownloadURL(storageRef);
@@ -2316,7 +2368,7 @@ const MebDocumentsCategory = ({ mebDocs, onDelete }) => {
                         <li key={doc.id} className="p-4 flex justify-between items-center hover:bg-gray-50">
                              <div>
                                 <span className="text-gray-700 font-medium">{doc.documentName}</span>
-                                <p className="text-xs text-gray-500">Uploaded: {doc.uploadDate.toDate().toLocaleDateString()}</p>
+                                <p className="text-xs text-gray-500">Uploaded: {formatDate(doc.uploadDate)}</p>
                             </div>
                             <div className="flex space-x-2">
                                 <a href={doc.fileUrl} target="_blank" rel="noopener noreferrer" className="p-2 text-gray-500 hover:text-blue-600 rounded-full hover:bg-gray-200"><Icon path={ICONS.EYE} className="w-5 h-5" /></a>
@@ -2358,7 +2410,6 @@ const SettingsModule = () => {
         const studentDocsFolder = zip.folder("student_documents");
         const financeDocsFolder = zip.folder("finance_documents");
         
-        // This is a simplified example. A full implementation would fetch each file's blob content.
         students.forEach(s => {
             if (s.documents?.nationalIdUrl) studentDocsFolder.file(`${s.fullName}_ID.txt`, "Link: " + s.documents.nationalIdUrl);
             if (s.documents?.agreementUrl) studentDocsFolder.file(`${s.fullName}_Agreement.txt`, "Link: " + s.documents.agreementUrl);
@@ -2381,12 +2432,12 @@ const SettingsModule = () => {
             if (messageType === 'latePayment') {
                 const unpaid = student.installments?.find(i => i.status === 'Unpaid');
                 if (unpaid) {
-                    message = `Dear Parent of ${student.fullName},\n\nThis is a friendly reminder that installment #${unpaid.number} of ₺${unpaid.amount.toFixed(2)} was due on ${unpaid.dueDate.toDate().toLocaleDateString()}. Please arrange for payment at your earliest convenience.\n\nThank you,\nÜnlü Dil Kursu`;
+                    message = `Sayın ${student.fullName} Velisi,\n\nBu bir ödeme hatırlatmasıdır. Öğrencinizin ${unpaid.amount.toFixed(2)} ₺ tutarındaki #${unpaid.number} numaralı taksit ödemesinin son tarihi ${formatDate(unpaid.dueDate)} idi. Ödemenizi en kısa sürede yapmanızı rica ederiz.\n\nTeşekkürler,\nÜnlü Dil Kursu`;
                 } else {
-                    message = `Dear Parent of ${student.fullName},\n\nThank you for being up to date with all payments!\n\nBest regards,\nÜnlü Dil Kursu`;
+                    message = `Sayın ${student.fullName} Velisi,\n\nTüm ödemeleriniz güncel olduğu için teşekkür ederiz!\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
                 }
             } else if (messageType === 'studentAbsence') {
-                message = `Dear Parent of ${student.fullName},\n\nWe noticed that ${student.fullName} was absent from class today. Please let us know if everything is alright.\n\nBest regards,\nÜnlü Dil Kursu`;
+                message = `Sayın ${student.fullName} Velisi,\n\nÖğrenciniz ${student.fullName}'nin bugünkü derse katılmadığını fark ettik. Her şeyin yolunda olduğunu teyit etmek için bilgilendirme yapmak istedik.\n\nSaygılarımızla,\nÜnlü Dil Kursu`;
             }
             setGeneratedMessage(message);
         } else {
@@ -2402,10 +2453,10 @@ const SettingsModule = () => {
         textArea.select();
         try {
             document.execCommand('copy');
-            setCopySuccess('Copied!');
+            setCopySuccess('Kopyalandı!');
             setTimeout(() => setCopySuccess(''), 2000);
         } catch (err) {
-            setCopySuccess('Failed to copy!');
+            setCopySuccess('Kopyalanamadı!');
         }
         document.body.removeChild(textArea);
     };
@@ -2471,6 +2522,10 @@ const Sidebar = ({ currentPage, setCurrentPage, isSidebarOpen }) => {
                         <NavItem icon={ICONS.GROUPS} label="Groups" pageName="groups" />
                         <NavItem icon={ICONS.FINANCES} label="Finances" pageName="finances" />
                         <NavItem icon={ICONS.DOCUMENTS} label="Documents" pageName="documents" />
+                    </ul>
+                </nav>
+                 <nav className="p-4">
+                    <ul>
                         <NavItem icon={ICONS.SETTINGS} label="Settings" pageName="settings" />
                     </ul>
                 </nav>
@@ -2479,17 +2534,7 @@ const Sidebar = ({ currentPage, setCurrentPage, isSidebarOpen }) => {
     );
 };
 
-const Header = ({ toggleSidebar }) => {
-    return (
-        <header className="flex items-center justify-between md:justify-end h-16 px-6 bg-white border-b border-gray-200 flex-shrink-0">
-            <button onClick={toggleSidebar} className="md:hidden text-gray-500">
-                <Icon path={ICONS.MENU} />
-            </button>
-        </header>
-    );
-};
-
-const MainContent = ({ currentPage }) => {
+const MainContent = ({ currentPage, toggleSidebar }) => {
     const renderPage = () => {
         switch (currentPage) {
             case 'dashboard': return <DashboardModule />;
@@ -2501,7 +2546,14 @@ const MainContent = ({ currentPage }) => {
             default: return <DashboardModule />;
         }
     };
-    return <main className="flex-1 overflow-y-auto bg-gray-100">{renderPage()}</main>;
+    return (
+        <main className="flex-1 overflow-y-auto bg-gray-100 relative">
+            <button onClick={toggleSidebar} className="md:hidden absolute top-4 left-4 z-10 p-2 bg-gray-800/50 text-white rounded-full">
+                <Icon path={ICONS.MENU} />
+            </button>
+            {renderPage()}
+        </main>
+    );
 };
 
 // --- MAIN APP COMPONENT ---
@@ -2592,8 +2644,7 @@ export default function App() {
             <div className="flex h-screen font-sans text-gray-900 bg-gray-100">
                 <Sidebar currentPage={currentPage} setCurrentPage={setCurrentPage} isSidebarOpen={isSidebarOpen}/>
                 <div className="flex flex-col flex-1 min-w-0">
-                    <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
-                    <MainContent currentPage={currentPage} />
+                    <MainContent currentPage={currentPage} toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} />
                 </div>
             </div>
         </AppContext.Provider>
